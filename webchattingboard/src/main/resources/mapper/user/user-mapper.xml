@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="user">
+
+
+
+
+	<insert id="insertUser" parameterType="user">
+				insert into member values(#{userID},#{userPassword},#{userName},#{userAge},#{userGender},#{email},#{profile,jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="selectOneMember" resultType="string">
+		select * from member where userid=#{userID}
+	</select>
+	<select id="checkId" resultType="_int">
+		select count(*) from member where userid=#{userID}
+	</select>
+	
+	<select id="chatting" resultType="chat">
+		select * from chat where 
+		((fromid=#{formId} and toId=#{toId}) 
+		or (fromId=#{fromId} and toId=#{toId}))
+		and chatId > #{chatId} order by chatTime
+	</select>
+		<select id="getChatListByRecent" resultType="chat">
+		select * from chat where 
+		((fromid=#{formId} and toId=#{toId}) 
+		or (fromId=#{fromId} and toId=#{toId}))
+		and chatId >(select max(chatId) - #{chatId} from chat) order by chatTime
+	</select>
+	<insert id="submit" parameterType="">
+		insert into chat values(chatId.seq.nextval,#{fromId},#{toId},#{chatContent},now())
+	</insert>
+</mapper>
