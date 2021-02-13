@@ -1,5 +1,8 @@
 package com.web.ajax.user.model.service;
 
+import java.util.List;
+
+import com.web.ajax.user.model.vo.Chat;
 import com.web.ajax.user.model.vo.User;
 
 public interface WebChatService {
@@ -9,5 +12,10 @@ public interface WebChatService {
 	User selectOneMember(String userID);
 
 	int checkId(String userID);
+
+	int submit(Chat chat);
+
+	int selectOneUser(String userID, String userPassword);
+
 
 }

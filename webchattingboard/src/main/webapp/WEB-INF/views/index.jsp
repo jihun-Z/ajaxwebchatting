@@ -19,12 +19,13 @@
      <script src="${path }/resources/js/bootstrap.js"></script>
 </head>
 <body>
-	<%
+<%-- 	<%
 		String userID= null;
 		if(session.getAttribute("userID") != null){
 			userID =(String) session.getAttribute("userID");
 		}
-	%>
+	%> --%>
+	<c:set value="${userID}" var="userID"/>
 	<nav class="navbar navbar-default">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed"
@@ -40,7 +41,7 @@
 			<ul class="nav navbar-nav">
 				<li class="active"><a href="index.jsp">메인</a>
 			</ul>
-			<c:if test="userID == null">
+		<c:if test="${userID == null }">
 			<ul class="nav navbar-nav navbar-right">
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle"
@@ -53,14 +54,18 @@
 						</ul>
 					</li>
 			</ul>
-			</c:if>
-			<c:if test="userID != null">
-			<ul class="nav navbar-nav navbar-right">
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle"
-						data-toggle="dropdown" role="buton" aria-haspopup="true"
-						aria-expanded="false">회원관리<span class="caret"></span>
-						</a>
+		</c:if>
+			<c:if test="${userID != null }">
+				<ul class="nav navbar-nav navbar-right">
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle"
+							data-toggle="dropdown" role="buton" aria-haspopup="true"
+							aria-expanded="false">회원관리<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a href="${path }/logoutAction.do">로그아웃</a></li>
+						
+							</ul>
 			</c:if>
 		</div>
 	</nav>

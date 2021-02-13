@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 @Component
 public class Chat {
 	private int chatId;
-	private String fromId;
-	private String toId;
+	private String fromID;
+	private String toID;
 	private String chatContent;
 	private String chatTime;
 }

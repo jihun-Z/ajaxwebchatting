@@ -4,25 +4,14 @@
     <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
     <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
      <c:set var="path" value="${pageContext.request.contextPath }"/>
-     
-	<%
+     <%
 		String userID= null;
 		if(session.getAttribute("userID") != null){
 			userID =(String) session.getAttribute("userID");
 		}
-		String toID=null;
-		if(request.getParameter("toID") != null){
-			toID=(String) request.getParameter("toID");
-		}
-		if(userID == null ){
+		if(userID != null ){
 			session.setAttribute("messageType","오류메세지");
-			session.setAttribute("messageContent","현재 로그인이 되어 있지 않습니다.");
-			response.sendRedirect("/index.do");
-			return;
-		}
-		if(toID == null ){
-			session.setAttribute("messageType","오류메세지");
-			session.setAttribute("messageContent","대화상대가 지정되어 있지않습니다.");
+			session.setAttribute("messageContent","현재 로그인이 되어 있는 상태입니다.");
 			response.sendRedirect("/index.do");
 			return;
 		}
@@ -39,42 +28,12 @@
 <title>ajax 실시간 채팅 서비스</title>
      <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
      <script src="${path }/resources/js/bootstrap.js"></script>
-     <script type="text/javascript">
-     	function autoClosingAlert(selector,delay){
-     		let alert =$(selector).alert();
-     		console.log("alert:"+alert);
-     		alert.show();
-     		console.log(alert.show());
-     		window.setTimeout(function() { alert.hide() },delay);
-     	}
-     	function submitFunction(){
-     		let fromID="<c:out value='${userID}'/>";
-     		let toID="${toID}";
-     		let chatContent= $("#chatContent").val();
-     		$.ajax({
-     			type:"POST",
-     			url:"${path}/chatSubmit.do",
-     			data:{
-     				fromID:encodeURIComponent(fromID),
-     				toID:encodeURIComponent(toID),
-     				chatContent:encodeURIComponent(chatContent)
-     			},
-     				success:function(result){
-     					if(result == 1){
-     						autoClosingAlert("#successMessage",3000);
-     					}else if(result== 0){
-     						autoClosingAlert("#dangerMessage",3000);
-     					}else{
-     						autoClosingAlert("#worningMessage",3000);
-     					}
-     				}
-     		});
-     		$('#chatContent').val();//다하면 메시지창 비워주기
-     	}
-     	
-     </script>
 </head>
+<script type="text/javascript">
+	
+</script>
 <body>
+	<c:set value="${userID}" var="uerID"/>
 	<nav class="navbar navbar-default">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed"
@@ -90,68 +49,59 @@
 			<ul class="nav navbar-nav">
 				<li class="active"><a href="index.jsp">메인</a>
 			</ul>
-			<c:if test="${userID != null}">
-			<ul class="nav navbar-nav navbar-right">
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle"
-						data-toggle="dropdown" role="buton" aria-haspopup="true"
-						aria-expanded="false">회원관리<span class="caret"></span>
-						</a>
-						<ul class="dropdown-menu">
-							<li><a href="${path }/logoutAction.do">로그아웃</a></li>
-					
-						</ul>
+			<c:if test="${userID == null }">
+				<ul class="nav navbar-nav navbar-right">
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle"
+							data-toggle="dropdown" role="buton" aria-haspopup="true"
+							aria-expanded="false">접속하기<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a href="${path }/login.jsp">로그인</a></li>
+								<li><a href="${path }/join.jsp">회원가입</a></li>
+							</ul>
+						</li>
+				</ul>
 			</c:if>
 		</div>
 	</nav>
-	<div class="container bootstrap snippet">
-		<div class="row">
-			<div class="portlet partlet-default">
-				<div class="portlet-heading">
-				
-					<div class="portlet-title">
-						<h4><i class="fa fa-circle text-green"></i>실시간 채팅창</h4>
-					</div>
-					<div class="clearfix"></div>
-				</div>
-
-			<div id="chat" class="panel-collapse collapse in">
-				<div id="chatList" class="porlet-body chat-widget" style="overflow-y:auto; width:auto;height:400px;background: khaki;">
-				</div>
-				<div class="portlet-footer">
-					<div class="row" style="height:90px;">
-						<div class="form-group col-xs-10">
-							<textarea style="height:80px;" id="chatContent" class="form-control" placeholder="메시지를 입력하세요" maxlength="100"></textarea>
-						</div>
-						<div class="form-group col-xs-2">
-							<button type="button" class="btn btn-default pull-right" onclick="submitFunction();">전송</button>
-							<div class="clearfix"></div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+	<div class="container">
+		<form method="post" action="${path }/userlogin.do">
+			<table class="table table-bordered table-hover" style="text-align:center; border:1px solid #dddddd;">
+				<thead>
+					<tr>
+						<th colspan="2"><h4>로그인 양식</h4></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td style="width:110px;"><h5>아이디</h5></td>
+						<td><input class="form-control" type="text" name="userID" maxlength="20" placeholer="아이디를  입력하세요."/></td>
+					</tr>
+					<tr>
+						<td style="width:110px;"><h5>비밀번호</h5></td>
+						<td><input class="form-control" type="password" name="userPassword" maxlength="20" placeholer="비밀번호를  입력하세요."/></td>
+					</tr>
+					<tr>
+						<td style="text-align: left;" colspan="2"><input class="btn btn-primary pull-right" type="submit" value="로그인"/></td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
 	</div>
-	</div>
-	<div class="alert alert-success" id="successMessage" style="display:none;">
-		<strong>메세지 전송에 성공했습니다.</strong>
-	</div>
-	<div class="alert alert-danger" id="dangerMessage" style="display:none;">
-		<strong>이름과 내용을 모두 입력해주세요.</strong>
-	</div>
-	<div class="alert alert-worning" id="worningMessage" style="display:none;">
-		<strong>데이터베이스 오류가 발생했습니다.</strong>
-	</div>
-<%
+<%-- <%
 	String messageContent = null;
 	if(session.getAttribute("messageContent") != null){
 		messageContent = (String) session.getAttribute("messageContent");
+		
 	}
 	String messageType= null;
 	if(session.getAttribute("messageType") != null ){
 		messageType=(String) session.getAttribute("messageType");
 	}
-%> 
+%> --%>
+<c:set value="${messageContent }" var="messageContent"/>
+<c:set value="${messageType }" var="messageType"/>
 <c:if test="${messageContent != null}">
 <c:if test="${messageType != null}">
 	<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" arid-hidden="true">
@@ -187,4 +137,5 @@
 		session.removeAttribute("messageType");
 	%>
 </body>
+
 </html>

@@ -9,7 +9,10 @@
 				insert into member values(#{userID},#{userPassword},#{userName},#{userAge},#{userGender},#{email},#{profile,jdbcType=VARCHAR})
 	</insert>
 	
-	<select id="selectOneMember" resultType="string">
+	<select id="selectOneMember" resultType="user">
+		select * from member where userid=#{userID}
+	</select>
+	<select id="selectOneUser" resultType="user">
 		select * from member where userid=#{userID}
 	</select>
 	<select id="checkId" resultType="_int">
@@ -22,13 +25,13 @@
 		or (fromId=#{fromId} and toId=#{toId}))
 		and chatId > #{chatId} order by chatTime
 	</select>
-		<select id="getChatListByRecent" resultType="chat">
+		<select id="chat" resultType="chat">
 		select * from chat where 
 		((fromid=#{formId} and toId=#{toId}) 
 		or (fromId=#{fromId} and toId=#{toId}))
 		and chatId >(select max(chatId) - #{chatId} from chat) order by chatTime
 	</select>
-	<insert id="submit" parameterType="">
-		insert into chat values(chatId.seq.nextval,#{fromId},#{toId},#{chatContent},now())
+	<insert id="submit" parameterType="chat">
+		insert into chat values(chatId.nextval,#{fromID},#{toID},#{chatContent},sysdate)
 	</insert>
 </mapper>

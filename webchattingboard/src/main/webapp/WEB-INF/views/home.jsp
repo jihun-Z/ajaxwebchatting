@@ -4,7 +4,18 @@
     <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
     <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
      <c:set var="path" value="${pageContext.request.contextPath }"/>
-     
+     <%
+		String userID= null;
+		if(session.getAttribute("userID") != null){
+			userID =(String) session.getAttribute("userID");
+		}
+		if(userID != null ){
+			session.setAttribute("messageType","오류메세지");
+			session.setAttribute("messageContent","현재 로그인이 되어 있는 상태입니다.");
+			response.sendRedirect("/index.do");
+			return;
+		}
+	%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,12 +60,7 @@
 	}
 </script>
 <body>
-	<%
-		String userID= null;
-		if(session.getAttribute("userID") != null){
-			userID =(String) session.getAttribute("userID");
-		}
-	%>
+	
 	<nav class="navbar navbar-default">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed"
@@ -70,7 +76,6 @@
 			<ul class="nav navbar-nav">
 				<li class="active"><a href="index.jsp">메인</a>
 			</ul>
-			<c:if test="userID == null">
 			<ul class="nav navbar-nav navbar-right">
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle"
@@ -78,20 +83,11 @@
 						aria-expanded="false">접속하기<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="${path }login.jsp">로그인</a></li>
-							<li><a href="${path }join.jsp">회원가입</a></li>
+							<li><a href="${path }/login.jsp">로그인</a></li>
+							<li><a href="${path }/join.jsp">회원가입</a></li>
 						</ul>
 					</li>
 			</ul>
-			</c:if>
-			<c:if test="userID != null">
-			<ul class="nav navbar-nav navbar-right">
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle"
-						data-toggle="dropdown" role="buton" aria-haspopup="true"
-						aria-expanded="false">회원관리<span class="caret"></span>
-						</a>
-			</c:if>
 		</div>
 	</nav>
 	<div class="container">
@@ -161,7 +157,7 @@
 		messageType=(String) session.getAttribute("messageType");
 	}
 %>
-<c:if test="messageContent != null">
+<c:if test="${messageContent != null }">
 	<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" arid-hidden="true">
 		<div class="vertical-alignment-helper">
 			<div class="modal-dialog vertical-align-center">

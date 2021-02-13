@@ -6,6 +6,7 @@
  			</settings>
 	<typeAliases>
 		<typeAlias type="com.web.ajax.user.model.vo.User" alias="user"/>
+		<typeAlias type="com.web.ajax.user.model.vo.Chat" alias="chat"/>
 		
 	</typeAliases>
 </configuration>
