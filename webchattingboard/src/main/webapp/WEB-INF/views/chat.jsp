@@ -5,30 +5,30 @@
     <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
      <c:set var="path" value="${pageContext.request.contextPath }"/>
      
-	<%
+	 <%
 		String userID= null;
 		if(session.getAttribute("userID") != null){
 			userID =(String) session.getAttribute("userID");
-			return;
+			
 		}
 		String toID=null;
 		if(request.getParameter("toID") != null){
 			toID=(String) request.getParameter("toID");
-			return;
-		}
+		
+		} 
 		if(userID == null ){
 			session.setAttribute("messageType","오류메세지");
 			session.setAttribute("messageContent","현재 로그인이 되어 있지 않습니다.");
 			response.sendRedirect("index.do");
 			return;
 		}
-		if(toID == null ){
+	/* 	if(toID == null ){
 			session.setAttribute("messageType","오류메세지");
 			session.setAttribute("messageContent","대화상대가 지정되어 있지않습니다.");
 			response.sendRedirect("index.do");
 			return;
-		}
-	%>
+		}   */
+	%> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -51,7 +51,8 @@
      	}
      	function submitFunction(){
      		let fromID="<c:out value='${userID}'/>";
-     		let toID="${toID}";
+     		console.log("fromID:"+fromID);
+     		let toID="11111";
      		let chatContent= $("#chatContent").val();
      		$.ajax({
      			type:"POST",
@@ -75,8 +76,10 @@
      	}
      	let lastID= 0;
      	function chatListFunction(type){
-     		let fromID='${fromID}',
-     		let toID='${toID}';
+     		let fromID='<c:out value='${userID}'/>';
+     		//let toID='${toID}';
+     		let toID='11111';
+     		console.log("fromID:"+fromID);
      		$.ajax({
      			type:"post",
      			url:"${path}/chatList.do",
@@ -121,7 +124,7 @@
      		'</div>'+
      		'</div>'+
      		'</div>');
-     		$("#chatList").scrollTop('#chatList')[0].scrollHeight);
+     		$("#chatList").scrollTop('#chatList')[0].scrollHeight;
      	}
      	
      	/* 새로운 메시지를 가져올때마다 시간체크하는 함수 */
@@ -248,6 +251,7 @@
 	<script type="text/javascript">
 	$(document).ready(function(){
 		chatListFunction('ten');
+		getInfiniteChat();
 	});
 	</script>
 </body>

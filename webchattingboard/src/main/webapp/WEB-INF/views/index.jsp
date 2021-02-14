@@ -41,6 +41,8 @@
 			<ul class="nav navbar-nav">
 				<li ><a href="${path }/index.do">메인</a></li>
 				<li ><a href="${path }/find.do">친구찾기</a></li>
+				<li ><a href="${path }/chat.do">채팅</a></li>
+				
 			</ul>
 		<c:if test="${userID == null }">
 			<ul class="nav navbar-nav navbar-right">

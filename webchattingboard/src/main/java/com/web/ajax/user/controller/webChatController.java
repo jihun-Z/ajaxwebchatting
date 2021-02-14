@@ -161,6 +161,11 @@ public class webChatController {
 		
 		return "find";
 	}
+	@RequestMapping("/chat.do")
+	public String chatPage() {
+	
+		return "chat";
+	}
 	
 	@RequestMapping("/logoutAction.do")
 	public String logoutAction(HttpSession session, SessionStatus ss) {
@@ -207,22 +212,40 @@ public class webChatController {
 		System.out.println("mv:"+mv);
 		return mv;
 	}
+	
+	
+	//chatSubmitServlet
 	@ResponseBody
 	@RequestMapping("/chatSubmit.do")
-	public String chatSubmit(String fromID,String toID,String listType,Model m) {
+	public int chatSubmit(Chat chat,Model m) {
+		int result;
+		if(chat.getFromID()==null|| chat.getFromID().equals("")||
+				chat.getToID() ==null || chat.getToID().equals("")||
+				chat.getChatContent() == null|| chat.getChatContent().equals("")) {
+			result=0;
+			
+		}else {
+			 result=service.submit(chat);
+		}
+		return result;
+	}
+	//chatlistServlet 
+	@ResponseBody
+	@RequestMapping("/chatList.do")
+	public Model chatList(String fromID,String toID,String listType,Model m) {
 		if(fromID==null || fromID.equals("")|| toID==null || toID.equals("")||
 				listType==null|| listType.equals("")) 
 			m.addAttribute("");
-		else if(listType.equals("ten")) getTen(fromID,toID);
+		else if(listType.equals("ten")) m.addAttribute(getTen(fromID,toID));
 		else {
 			try {
-				getID(fromID,toID,listType);
+				m.addAttribute(getID(fromID,toID,listType));
 			}catch(Exception e) {
 				m.addAttribute("");
 		}
 	}
 
-		return "";
+		return m;
 	}
 	public String getTen(String fromID,String toID) {
 		StringBuffer result=new StringBuffer();
@@ -238,6 +261,7 @@ public class webChatController {
 		}
 		result.append("],\"last\":\""+chatList.get(chatList.size() -1)
 		.getChatId()+"\"}");
+		System.out.println("result:"+result.toString());
 		return result.toString();//문자열로 반환해준다.
 		
 	}
@@ -255,6 +279,7 @@ public class webChatController {
 		}
 		result.append("],\"last\":\""+chatList.get(chatList.size() -1)
 		.getChatId()+"\"}");
+		System.out.println("result:"+result.toString());
 		return result.toString();//문자열로 반환해준다.
 		
 	}
