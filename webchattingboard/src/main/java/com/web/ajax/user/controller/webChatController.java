@@ -1,6 +1,8 @@
 package com.web.ajax.user.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -19,7 +21,7 @@ import com.web.ajax.user.model.vo.Chat;
 import com.web.ajax.user.model.vo.User;
 
 @Controller
-@SessionAttributes(value= {"loginMember"})
+@SessionAttributes(value= {"userID"})
 public class webChatController {
 	@Autowired
 	WebChatService service;
@@ -91,7 +93,7 @@ public class webChatController {
 			mv.addAttribute("messageType","성공 메시지");
 			mv.addAttribute("messageContent","로그인에 성공하였습니다.");
 			//loc="redirect:/";
-			loc="login";
+			loc="redirect:/";
 			
 		}else {
 			mv.addAttribute("msg","로그인 실패");
@@ -141,19 +143,6 @@ public class webChatController {
 //		chatList.add(catt);
 //		return "";
 //	}
-	@ResponseBody
-	@RequestMapping("/chatSubmit.do")
-	public int submit(Chat chat, Model m) {
-		if(chat.getFromID()== null|| chat.getFromID().equals("")
-				||chat.getToID()==null|| chat.getToID().equals("")
-				||chat.getChatContent()==null|| chat.getChatContent().equals("")) {
-			m.addAttribute("result","0");
-		}
-		
-		int result=service.submit(chat);
-		System.out.println("result:"+result);
-		return result;
-	}
 	
 	@RequestMapping("/index.do")
 	public String index() {
@@ -166,6 +155,11 @@ public class webChatController {
 	@RequestMapping("/login.do")
 	public String loginPage() {
 		return "login";
+	}
+	@RequestMapping("/find.do")
+	public String findFriend() {
+		
+		return "find";
 	}
 	
 	@RequestMapping("/logoutAction.do")
@@ -213,4 +207,65 @@ public class webChatController {
 		System.out.println("mv:"+mv);
 		return mv;
 	}
+	@ResponseBody
+	@RequestMapping("/chatSubmit.do")
+	public String chatSubmit(String fromID,String toID,String listType,Model m) {
+		if(fromID==null || fromID.equals("")|| toID==null || toID.equals("")||
+				listType==null|| listType.equals("")) 
+			m.addAttribute("");
+		else if(listType.equals("ten")) getTen(fromID,toID);
+		else {
+			try {
+				getID(fromID,toID,listType);
+			}catch(Exception e) {
+				m.addAttribute("");
+		}
+	}
+
+		return "";
+	}
+	public String getTen(String fromID,String toID) {
+		StringBuffer result=new StringBuffer();
+		result.append("\"result\":[");
+		List<Chat> chatList=service.getChatListByRecent(fromID,toID);
+		if(chatList.size() ==0 ) return "";
+		for(int i = 0; i <chatList.size(); i++) {
+			result.append("[{\"value\":\""+chatList.get(i).getFromID()+"\"},");
+			result.append("{\"value\":\""+chatList.get(i).getToID()+"\"},");
+			result.append("{\"value\":\""+chatList.get(i).getChatContent()+"\"},");
+			result.append("{\"value\":\""+chatList.get(i).getChatTime()+"\"}]");
+			if(i != chatList.size() -1 ) result.append(",");//더있다면 ,를찍어라
+		}
+		result.append("],\"last\":\""+chatList.get(chatList.size() -1)
+		.getChatId()+"\"}");
+		return result.toString();//문자열로 반환해준다.
+		
+	}
+	public String getID(String fromID,String toID,String chatID) {
+		StringBuffer result=new StringBuffer();
+		result.append("\"result\":[");
+		List<Chat> chatList=service.getChatListByID(fromID,toID,chatID);
+		if(chatList.size() ==0 ) return "";
+		for(int i = 0; i <chatList.size(); i++) {
+			result.append("[{\"value\":\""+chatList.get(i).getFromID()+"\"},");
+			result.append("{\"value\":\""+chatList.get(i).getToID()+"\"},");
+			result.append("{\"value\":\""+chatList.get(i).getChatContent()+"\"},");
+			result.append("{\"value\":\""+chatList.get(i).getChatTime()+"\"}]");
+			if(i != chatList.size() -1 ) result.append(",");//더있다면 ,를찍어라
+		}
+		result.append("],\"last\":\""+chatList.get(chatList.size() -1)
+		.getChatId()+"\"}");
+		return result.toString();//문자열로 반환해준다.
+		
+	}
+	@ResponseBody
+	@RequestMapping("/userRegisterCheck.do")
+	public int userRegisterCheck(String userID,Model m) {
+		int result;
+		if(userID==null || userID.equals("")) result= -1;
+		
+		result=service.userRegisterCheck(userID);
+		return result;
+	}
+	
 }

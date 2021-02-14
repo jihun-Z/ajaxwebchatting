@@ -12,7 +12,7 @@
 		if(userID != null ){
 			session.setAttribute("messageType","오류메세지");
 			session.setAttribute("messageContent","현재 로그인이 되어 있는 상태입니다.");
-			response.sendRedirect("/index.do");
+			response.sendRedirect("index.do");
 			return;
 		}
 	%>
@@ -74,7 +74,8 @@
 		</div>
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="index.jsp">메인</a>
+				<li ><a href="${path }/index.do">메인</a></li>
+				<li ><a href="${path }/find.do">친구찾기</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 					<li class="dropdown">

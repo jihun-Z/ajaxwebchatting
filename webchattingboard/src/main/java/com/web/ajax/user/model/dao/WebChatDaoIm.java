@@ -1,5 +1,6 @@
 package com.web.ajax.user.model.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -47,6 +48,31 @@ public class WebChatDaoIm implements WebChatDao {
 	public User selectOneUser(SqlSession session, String userID) {
 		// TODO Auto-generated method stub
 		return session.selectOne("user.selectOneUser",userID);
+	}
+
+	@Override
+	public List<Chat> getChatListByRecent(SqlSession session, String fromID, String toID) {
+		TreeMap<String,String> map=new TreeMap<String,String>();
+		map.put("fromID",fromID);
+		map.put("toID",toID);
+		// TODO Auto-generated method stub
+		return session.selectList("user.getChatListByRecent",map);
+	}
+
+	@Override
+	public Chat getChatListByID(SqlSession session, String fromID, String toID, String chatID) {
+		TreeMap<String,String> map=new TreeMap<String,String>();
+		map.put("fromID",fromID);
+		map.put("toID",toID);
+		map.put("chatID",chatID);
+		// TODO Auto-generated method stub
+		return session.selectOne("user.getChatListByID",map);
+	}
+
+	@Override
+	public int userRegisterCheck(SqlSession session, String userID) {
+		// TODO Auto-generated method stub
+		return session.selectOne("user.userRegisterCheck",userID);
 	}
 
 }

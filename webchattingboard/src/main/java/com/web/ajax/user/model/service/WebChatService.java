@@ -1,5 +1,6 @@
 package com.web.ajax.user.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.web.ajax.user.model.vo.Chat;
@@ -16,6 +17,12 @@ public interface WebChatService {
 	int submit(Chat chat);
 
 	int selectOneUser(String userID, String userPassword);
+
+	List<Chat> getChatListByRecent(String fromID, String toID);
+
+	List<Chat> getChatListByID(String fromID, String toID, String chatID);
+
+	int userRegisterCheck(String userID);
 
 
 }

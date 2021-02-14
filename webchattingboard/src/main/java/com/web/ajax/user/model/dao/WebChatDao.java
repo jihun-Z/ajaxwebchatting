@@ -1,5 +1,6 @@
 package com.web.ajax.user.model.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -20,5 +21,11 @@ public interface WebChatDao {
 	List<Chat> chat(SqlSession session, Chat chat);
 
 	User selectOneUser(SqlSession session, String userID);
+
+	List<Chat> getChatListByRecent(SqlSession session, String fromID, String toID);
+
+	Chat getChatListByID(SqlSession session, String fromID, String toID, String chatID);
+
+	int userRegisterCheck(SqlSession session, String userID);
 
 }

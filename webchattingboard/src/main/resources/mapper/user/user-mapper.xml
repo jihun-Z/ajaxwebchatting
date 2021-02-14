@@ -19,19 +19,23 @@
 		select count(*) from member where userid=#{userID}
 	</select>
 	
-	<select id="chatting" resultType="chat">
+	<select id="getChatListByID" resultType="map">
 		select * from chat where 
-		((fromid=#{formId} and toId=#{toId}) 
-		or (fromId=#{fromId} and toId=#{toId}))
+		((fromid=#{fromID} and toId=#{toID}) 
+		or (fromId=#{fromID} and toId=#{toID}))
 		and chatId > #{chatId} order by chatTime
 	</select>
-		<select id="chat" resultType="chat">
+		<select id="getChatListByRecent" resultType="map">
 		select * from chat where 
-		((fromid=#{formId} and toId=#{toId}) 
-		or (fromId=#{fromId} and toId=#{toId}))
+		((fromid=#{fromID} and toId=#{toID}) 
+		or (fromId=#{fromID} and toId=#{toID}))
 		and chatId >(select max(chatId) - #{chatId} from chat) order by chatTime
 	</select>
 	<insert id="submit" parameterType="chat">
 		insert into chat values(chatId.nextval,#{fromID},#{toID},#{chatContent},sysdate)
 	</insert>
+	<select id="userRegisterCheck" resultType="_int">
+		select count(*) from member where userID=#{userID}
+		
+	</select>
 </mapper>

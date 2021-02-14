@@ -9,21 +9,23 @@
 		String userID= null;
 		if(session.getAttribute("userID") != null){
 			userID =(String) session.getAttribute("userID");
+			return;
 		}
 		String toID=null;
 		if(request.getParameter("toID") != null){
 			toID=(String) request.getParameter("toID");
+			return;
 		}
 		if(userID == null ){
 			session.setAttribute("messageType","오류메세지");
 			session.setAttribute("messageContent","현재 로그인이 되어 있지 않습니다.");
-			response.sendRedirect("/index.do");
+			response.sendRedirect("index.do");
 			return;
 		}
 		if(toID == null ){
 			session.setAttribute("messageType","오류메세지");
 			session.setAttribute("messageContent","대화상대가 지정되어 있지않습니다.");
-			response.sendRedirect("/index.do");
+			response.sendRedirect("index.do");
 			return;
 		}
 	%>
@@ -71,7 +73,63 @@
      		});
      		$('#chatContent').val();//다하면 메시지창 비워주기
      	}
+     	let lastID= 0;
+     	function chatListFunction(type){
+     		let fromID='${fromID}',
+     		let toID='${toID}';
+     		$.ajax({
+     			type:"post",
+     			url:"${path}/chatList.do",
+     			data:{
+     				fromID:encodeURIComponent(fromID),
+     				toID:encodeURIComponent(toID),
+     				listType:type
+     			},
+     			success:function(data){
+     				if(data == null) return;
+     				let parsed=JSON.parse(data);
+     				let result=parsed.result;
+     				
+     				for(var i= 0; i <result.length; i++){
+     					if(result[i][0].value == fromID){
+     						result[i][0].value= '나';
+     					}
+     					addChat(result[i][0].value,result[i][2].value,result[i][3].value);
+     				}
+     				lastID = Number(parsed.last);//chatList중 마지막으로 전달받은 아이디
+     			}
+     		});
+     	}
+     	function addChat(chatName, chatContent,chatTime){
+     		$('#chatList').append('<div class="row">'+
+     		'<div class="col-lg-12">' +
+     		'<div class="media">'+
+     		'<a class="pull-left" href="#">'+
+     		'<img class="media-object img-circle" style="width:30px; height:30px;" src="${path}/resources/images/icon.png" alt="">'+
+     		'</a>'+
+     		'<div class="media-body">'+
+     		'<h4 class="media-heading">'+
+     		chatName +
+     		'<span class="small pull-right">'+
+     		chatTime +
+     		'</span>'+
+     		'</h4>'+
+     		'<p>'+
+     		chatContent + 
+     		'</p>'+
+     		'</div>'+
+     		'</div>'+
+     		'</div>'+
+     		'</div>');
+     		$("#chatList").scrollTop('#chatList')[0].scrollHeight);
+     	}
      	
+     	/* 새로운 메시지를 가져올때마다 시간체크하는 함수 */
+     	function getInfiniteChat(){
+     		setInterval(function(){
+     			chatListFunction(lastID);
+     		},3000);
+     	}
      </script>
 </head>
 <body>
@@ -88,7 +146,8 @@
 		</div>
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="index.jsp">메인</a>
+				<li ><a href="${path }/index.do">메인</a></li>
+				<li ><a href="${path }/find.do">친구찾기</a></li>
 			</ul>
 			<c:if test="${userID != null}">
 			<ul class="nav navbar-nav navbar-right">
@@ -116,7 +175,7 @@
 				</div>
 
 			<div id="chat" class="panel-collapse collapse in">
-				<div id="chatList" class="porlet-body chat-widget" style="overflow-y:auto; width:auto;height:400px;background: khaki;">
+				<div id="chatList" class="portlet-body chat-widget" style="overflow-y:auto; width:auto;height:400px;background: khaki;">
 				</div>
 				<div class="portlet-footer">
 					<div class="row" style="height:90px;">
@@ -186,5 +245,10 @@
 		session.removeAttribute("messageContent");
 		session.removeAttribute("messageType");
 	%>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		chatListFunction('ten');
+	});
+	</script>
 </body>
 </html>
