@@ -79,8 +79,7 @@
      		let fromID='<c:out value='${userID}'/>';
      		//let toID='${toID}';
      		let toID='11111';
-     		console.log("fromID:"+fromID);
-     		alert("실행!");
+     		console.log("chatListFunction-fromID:"+fromID);
      		$.ajax({
      			type:"post",
      			url:"${path}/chatList.do",
