@@ -20,9 +20,11 @@ public interface WebChatService {
 
 	List<Chat> getChatListByRecent(String fromID, String toID);
 
-	List<Chat> getChatListByID(String fromID, String toID, String chatID);
+	List<Chat> getChatListByID(String fromID, String toID,String chatID);
 
 	int userRegisterCheck(String userID);
+
+	Chat getChat(String fromID, String toID);
 
 
 }

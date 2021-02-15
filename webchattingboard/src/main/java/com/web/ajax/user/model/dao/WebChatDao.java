@@ -22,10 +22,12 @@ public interface WebChatDao {
 
 	User selectOneUser(SqlSession session, String userID);
 
-	List<Chat> getChatListByRecent(SqlSession session, String fromID, String toID);
-
-	Chat getChatListByID(SqlSession session, String fromID, String toID, String chatID);
-
 	int userRegisterCheck(SqlSession session, String userID);
+
+	Chat getChat(SqlSession session, String fromID, String toID);
+
+	List<Chat> getChatListByID(SqlSession session, String fromID, String toID, String chatId);
+
+	List<Chat> getChatListByRecent(SqlSession session, String fromID, String toID);
 
 }

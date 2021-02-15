@@ -55,24 +55,34 @@ public class WebChatDaoIm implements WebChatDao {
 		TreeMap<String,String> map=new TreeMap<String,String>();
 		map.put("fromID",fromID);
 		map.put("toID",toID);
+		
 		// TODO Auto-generated method stub
 		return session.selectList("user.getChatListByRecent",map);
 	}
 
 	@Override
-	public Chat getChatListByID(SqlSession session, String fromID, String toID, String chatID) {
+	public List<Chat> getChatListByID(SqlSession session, String fromID, String toID, String chatId) {
 		TreeMap<String,String> map=new TreeMap<String,String>();
 		map.put("fromID",fromID);
 		map.put("toID",toID);
-		map.put("chatID",chatID);
+		map.put("chatId",chatId);
 		// TODO Auto-generated method stub
-		return session.selectOne("user.getChatListByID",map);
+		return session.selectList("user.getChatListByID",map);
 	}
 
 	@Override
 	public int userRegisterCheck(SqlSession session, String userID) {
 		// TODO Auto-generated method stub
 		return session.selectOne("user.userRegisterCheck",userID);
+	}
+
+	@Override
+	public Chat getChat(SqlSession session, String fromID, String toID) {
+		TreeMap<String,String> map=new TreeMap<String,String>();
+		map.put("fromID",fromID);
+		map.put("toID",toID);
+		// TODO Auto-generated method stub
+		return session.selectOne("user.getChat",map);
 	}
 
 }

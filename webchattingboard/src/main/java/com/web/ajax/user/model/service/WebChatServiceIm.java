@@ -61,33 +61,64 @@ public class WebChatServiceIm implements WebChatService {
 	}
 	@Override
 	public List<Chat> getChatListByRecent(String fromID, String toID) {
-		// TODO Auto-generated method stub
-		return dao.getChatListByRecent(session,fromID,toID);
+		List<Chat> map=dao.getChatListByRecent(session,fromID,toID);
+		System.out.println("Map[Service]:"+map);
+		Chat chat=new Chat();
+		
+		List<Chat> chatList=new ArrayList<Chat>();
+		for(Chat chat1: map) {
+			if(chat !=null ) {
+				
+				chat.setChatId(chat1.getChatId());
+				chat.setFromID(chat1.getFromID().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
+				chat.setToID(chat1.getToID().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
+				chat.setChatContent(chat1.getChatContent().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
+				String timeChat=chat1.getChatTime();
+				int chatTime= Integer.parseInt(chat1.getChatTime().substring(11,13));
+				String timeType="오전";
+				if(chatTime >=12) {
+					timeType ="오후";
+					chatTime-= 12;
+				}
+				chat.setChatTime(chat1.getChatTime().substring(0,11)+" "+timeType+" "+chatTime+" : "+chat1.getChatTime().substring(14,16)+"");
+				chatList.add(chat);
+			}
+		}
+		System.out.println("service ten : "+chatList);
+		return chatList;
 	}
 	@Override
 	public List<Chat> getChatListByID(String fromID, String toID, String chatID) {
-		Chat map=dao.getChatListByID(session,fromID,toID,chatID);
+		List<Chat> map=dao.getChatListByID(session,fromID,toID,chatID);
 		Chat chat=new Chat();
 		List<Chat> chatList=new ArrayList<Chat>();
-		chat.setChatId(map.getChatId());
-		chat.setFromID(map.getFromID().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
-		chat.setToID(map.getToID().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
-		chat.setChatContent(map.getChatContent().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
-		int chatTime= Integer.parseInt(map.getChatTime().substring(11,13));
-		String timeType="오전";
-		if(chatTime >=12) {
-			timeType ="오후";
-			chatTime-= 12;
+		for(Chat chat1: map) {
+			
+			chat.setChatId(chat1.getChatId());
+			chat.setFromID(chat1.getFromID().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
+			chat.setToID(chat1.getToID().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
+			chat.setChatContent(chat1.getChatContent().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
+			int chatTime= Integer.parseInt(chat1.getChatTime().substring(11,13));
+			String timeType="오전";
+			if(chatTime >=12) {
+				timeType ="오후";
+				chatTime-= 12;
+			}
+			chat.setChatTime(chat1.getChatTime().substring(0,11)+" "+timeType+" "+chatTime+" : "+chat1.getChatTime().substring(14,16)+"");
+			chatList.add(chat);
 		}
-		chat.setChatTime(map.getChatTime().substring(0,11)+" "+timeType+" "+chatTime+" : "+map.getChatTime().substring(14,16)+"");
-		chatList.add(chat);
-		
+		System.out.println("service ID : "+chatList);
 		return chatList;
 	}
 	@Override
 	public int userRegisterCheck(String userID) {
 		// TODO Auto-generated method stub
 		return dao.userRegisterCheck(session,userID);
+	}
+	@Override
+	public Chat getChat(String fromID, String toID) {
+		// TODO Auto-generated method stub
+		return dao.getChat(session,fromID,toID);
 	}
 
 

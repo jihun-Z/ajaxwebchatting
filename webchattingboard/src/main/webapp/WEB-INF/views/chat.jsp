@@ -48,7 +48,7 @@
      		alert.show();
      		console.log(alert.show());
      		window.setTimeout(function() { alert.hide() },delay);
-     	}
+     	};
      	function submitFunction(){
      		let fromID="<c:out value='${userID}'/>";
      		console.log("fromID:"+fromID);
@@ -72,7 +72,7 @@
      					}
      				}
      		});
-     		$('#chatContent').val();//다하면 메시지창 비워주기
+     		$('#chatContent').val("");//다하면 메시지창 비워주기
      	}
      	let lastID= 0;
      	function chatListFunction(type){
@@ -80,6 +80,7 @@
      		//let toID='${toID}';
      		let toID='11111';
      		console.log("fromID:"+fromID);
+     		alert("실행!");
      		$.ajax({
      			type:"post",
      			url:"${path}/chatList.do",
@@ -89,10 +90,11 @@
      				listType:type
      			},
      			success:function(data){
+     				console.log("반환된 데이터 실행: "+data);
      				if(data == null) return;
      				let parsed=JSON.parse(data);
      				let result=parsed.result;
-     				
+     				console.log("result"+result);
      				for(var i= 0; i <result.length; i++){
      					if(result[i][0].value == fromID){
      						result[i][0].value= '나';
@@ -104,6 +106,8 @@
      		});
      	}
      	function addChat(chatName, chatContent,chatTime){
+     		
+     		console.log("addchat 실행");
      		$('#chatList').append('<div class="row">'+
      		'<div class="col-lg-12">' +
      		'<div class="media">'+
@@ -125,13 +129,13 @@
      		'</div>'+
      		'</div>');
      		$("#chatList").scrollTop('#chatList')[0].scrollHeight;
-     	}
+     	};
      	
      	/* 새로운 메시지를 가져올때마다 시간체크하는 함수 */
      	function getInfiniteChat(){
-     		setInterval(function(){
+     	 	setInterval(function(){
      			chatListFunction(lastID);
-     		},3000);
+     		},30000); 
      	}
      </script>
 </head>

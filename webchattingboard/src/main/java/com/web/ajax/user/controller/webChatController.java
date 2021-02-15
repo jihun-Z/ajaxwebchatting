@@ -1,9 +1,10 @@
 package com.web.ajax.user.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.net.URLDecoder;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -232,24 +233,35 @@ public class webChatController {
 	//chatlistServlet 
 	@ResponseBody
 	@RequestMapping("/chatList.do")
-	public Model chatList(String fromID,String toID,String listType,Model m) {
+	public void chatList(String fromID,String toID,String listType,HttpServletResponse response) throws IOException {
+		
+		response.setContentType("text/html;charset=UTF-8");;
+		System.out.println(""+listType);
 		if(fromID==null || fromID.equals("")|| toID==null || toID.equals("")||
-				listType==null|| listType.equals("")) 
-			m.addAttribute("");
-		else if(listType.equals("ten")) m.addAttribute(getTen(fromID,toID));
+				listType==null|| listType.equals("")) {
+			
+			response.getWriter().write("");
+		}
+	
+				// TODO Auto-generated catch block
+		
+		else if(listType.equals("ten"))
+	
+				response.getWriter().write(getTen(URLDecoder.decode(fromID,"UTF-8"),URLDecoder.decode(toID,"UTF-8")));
 		else {
 			try {
-				m.addAttribute(getID(fromID,toID,listType));
+				response.getWriter().write(getID(URLDecoder.decode(fromID,"UTF-8"),URLDecoder.decode(toID,"UTF-8"),listType));
 			}catch(Exception e) {
-				m.addAttribute("");
+					response.getWriter().write("");
+				}
 		}
 	}
 
-		return m;
-	}
 	public String getTen(String fromID,String toID) {
+		System.out.println("getTen: 실행");
 		StringBuffer result=new StringBuffer();
 		result.append("\"result\":[");
+		
 		List<Chat> chatList=service.getChatListByRecent(fromID,toID);
 		if(chatList.size() ==0 ) return "";
 		for(int i = 0; i <chatList.size(); i++) {
@@ -261,25 +273,29 @@ public class webChatController {
 		}
 		result.append("],\"last\":\""+chatList.get(chatList.size() -1)
 		.getChatId()+"\"}");
-		System.out.println("result:"+result.toString());
+		System.out.println(" getTen result:"+result.toString());
 		return result.toString();//문자열로 반환해준다.
 		
 	}
-	public String getID(String fromID,String toID,String chatID) {
+	public String getID(String fromID,String toID, String listType) {
+		System.out.println("getID: 실행");
+//		Chat chat=service.getChat(fromID,toID);
+//		System.out.println("chatID"+chat.getChatId());
+//		String chatID=Integer.toString(chat.getChatId());
 		StringBuffer result=new StringBuffer();
 		result.append("\"result\":[");
-		List<Chat> chatList=service.getChatListByID(fromID,toID,chatID);
+		List<Chat> chatList=service.getChatListByID(fromID,toID,listType);
 		if(chatList.size() ==0 ) return "";
 		for(int i = 0; i <chatList.size(); i++) {
-			result.append("[{\"value\":\""+chatList.get(i).getFromID()+"\"},");
-			result.append("{\"value\":\""+chatList.get(i).getToID()+"\"},");
-			result.append("{\"value\":\""+chatList.get(i).getChatContent()+"\"},");
-			result.append("{\"value\":\""+chatList.get(i).getChatTime()+"\"}]");
+			result.append("[{\"FromID\":\""+chatList.get(i).getFromID()+"\"},");
+			result.append("{\"ToID\":\""+chatList.get(i).getToID()+"\"},");
+			result.append("{\"ChatContent\":\""+chatList.get(i).getChatContent()+"\"},");
+			result.append("{\"ChatTime\":\""+chatList.get(i).getChatTime()+"\"}]");
 			if(i != chatList.size() -1 ) result.append(",");//더있다면 ,를찍어라
 		}
 		result.append("],\"last\":\""+chatList.get(chatList.size() -1)
 		.getChatId()+"\"}");
-		System.out.println("result:"+result.toString());
+		System.out.println("getId result:"+result.toString());
 		return result.toString();//문자열로 반환해준다.
 		
 	}
