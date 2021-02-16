@@ -60,7 +60,7 @@
      			data:{
      				fromID:encodeURIComponent(fromID),
      				toID:encodeURIComponent(toID),
-     				chatContent:encodeURIComponent(chatContent)
+     				chatContent:chatContent//encodeURIComponent사용하지않는다. oracleDB으로  이상하게 저장됨
      			},
      				success:function(result){
      					if(result == 1){
@@ -93,21 +93,23 @@
      				if(data == null) return;
      				let parsed=JSON.parse(data);
      				let result=parsed.result;
-     				console.log("result"+result);
+     				console.log("Chat-result:"+result);
      				for(var i= 0; i <result.length; i++){
      					if(result[i][0].value == fromID){
      						result[i][0].value= '나';
      					}
      					addChat(result[i][0].value,result[i][2].value,result[i][3].value);
      				}
+     				
      				lastID = Number(parsed.last);//chatList중 마지막으로 전달받은 아이디
+     				
      			}
      		});
      	}
      	function addChat(chatName, chatContent,chatTime){
      		
      		console.log("addchat 실행");
-     		$('#chatList').append('<div class="row">'+
+     		$('#chatList').html('<div class="row">'+
      		'<div class="col-lg-12">' +
      		'<div class="media">'+
      		'<a class="pull-left" href="#">'+
@@ -127,14 +129,14 @@
      		'</div>'+
      		'</div>'+
      		'</div>');
-     		$("#chatList").scrollTop('#chatList')[0].scrollHeight;
+     		$("#chatList").scrollTop($('#chatList')[0].scrollHeight);//아래 스크롤 고정코드
      	};
      	
      	/* 새로운 메시지를 가져올때마다 시간체크하는 함수 */
      	function getInfiniteChat(){
      	 	setInterval(function(){
      			chatListFunction(lastID);
-     		},30000); 
+     		},3000); 
      	}
      </script>
 </head>
@@ -253,7 +255,7 @@
 	%>
 	<script type="text/javascript">
 	$(document).ready(function(){
-		chatListFunction('ten');
+		chatListFunction("ten");
 		getInfiniteChat();
 	});
 	</script>

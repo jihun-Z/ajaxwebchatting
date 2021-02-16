@@ -20,4 +20,5 @@ public class Chat {
 	private String toID;
 	private String chatContent;
 	private String chatTime;
+	private int chatRead;
 }

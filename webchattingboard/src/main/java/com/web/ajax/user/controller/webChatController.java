@@ -233,7 +233,7 @@ public class webChatController {
 	//chatlistServlet 
 	@ResponseBody
 	@RequestMapping("/chatList.do")
-	public void chatList(String fromID,String toID,String listType,HttpServletResponse response) throws IOException {
+	public void chatList(String fromID,String toID,String listType,HttpServletResponse response) throws Exception {
 		
 		response.setContentType("text/html;charset=UTF-8");;
 		System.out.println(""+listType);
@@ -260,9 +260,10 @@ public class webChatController {
 	public String getTen(String fromID,String toID) {
 		System.out.println("getTen: 실행");
 		StringBuffer result=new StringBuffer();
-		result.append("\"result\":[");
 		
-		List<Chat> chatList=service.getChatListByRecent(fromID,toID);
+		result.append("{\"result\":[");
+		int number=20;//chatContent 불러올 갯수 
+		List<Chat> chatList=service.getChatListByRecent(fromID,toID,number);
 		if(chatList.size() ==0 ) return "";
 		for(int i = 0; i <chatList.size(); i++) {
 			result.append("[{\"value\":\""+chatList.get(i).getFromID()+"\"},");
@@ -274,28 +275,28 @@ public class webChatController {
 		result.append("],\"last\":\""+chatList.get(chatList.size() -1)
 		.getChatId()+"\"}");
 		System.out.println(" getTen result:"+result.toString());
+		service.readChat(fromID,toID);
 		return result.toString();//문자열로 반환해준다.
 		
 	}
 	public String getID(String fromID,String toID, String listType) {
 		System.out.println("getID: 실행");
-//		Chat chat=service.getChat(fromID,toID);
-//		System.out.println("chatID"+chat.getChatId());
-//		String chatID=Integer.toString(chat.getChatId());
 		StringBuffer result=new StringBuffer();
-		result.append("\"result\":[");
+		result.append("{\"result\":[");
 		List<Chat> chatList=service.getChatListByID(fromID,toID,listType);
 		if(chatList.size() ==0 ) return "";
 		for(int i = 0; i <chatList.size(); i++) {
-			result.append("[{\"FromID\":\""+chatList.get(i).getFromID()+"\"},");
-			result.append("{\"ToID\":\""+chatList.get(i).getToID()+"\"},");
-			result.append("{\"ChatContent\":\""+chatList.get(i).getChatContent()+"\"},");
-			result.append("{\"ChatTime\":\""+chatList.get(i).getChatTime()+"\"}]");
+			result.append("[{\"value\":\""+chatList.get(i).getFromID()+"\"},");
+			result.append("{\"value\":\""+chatList.get(i).getToID()+"\"},");
+			result.append("{\"value\":\""+chatList.get(i).getChatContent()+"\"},");
+			result.append("{\"value\":\""+chatList.get(i).getChatTime()+"\"}]");
 			if(i != chatList.size() -1 ) result.append(",");//더있다면 ,를찍어라
 		}
 		result.append("],\"last\":\""+chatList.get(chatList.size() -1)
 		.getChatId()+"\"}");
 		System.out.println("getId result:"+result.toString());
+		
+		service.readChat(fromID,toID);
 		return result.toString();//문자열로 반환해준다.
 		
 	}

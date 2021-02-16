@@ -51,7 +51,7 @@ public class WebChatDaoIm implements WebChatDao {
 	}
 
 	@Override
-	public List<Chat> getChatListByRecent(SqlSession session, String fromID, String toID) {
+	public List<Chat> getChatListByRecent(SqlSession session, String fromID, String toID,int number) {
 		TreeMap<String,String> map=new TreeMap<String,String>();
 		map.put("fromID",fromID);
 		map.put("toID",toID);
@@ -62,12 +62,12 @@ public class WebChatDaoIm implements WebChatDao {
 
 	@Override
 	public List<Chat> getChatListByID(SqlSession session, String fromID, String toID, String chatId) {
-		TreeMap<String,String> map=new TreeMap<String,String>();
-		map.put("fromID",fromID);
-		map.put("toID",toID);
-		map.put("chatId",chatId);
+	Chat chat=new Chat();
+	chat.setFromID(fromID);
+	chat.setToID(toID);
+	chat.setChatId(Integer.parseInt(chatId));
 		// TODO Auto-generated method stub
-		return session.selectList("user.getChatListByID",map);
+		return session.selectList("user.getChatListByID",chat);
 	}
 
 	@Override
@@ -83,6 +83,15 @@ public class WebChatDaoIm implements WebChatDao {
 		map.put("toID",toID);
 		// TODO Auto-generated method stub
 		return session.selectOne("user.getChat",map);
+	}
+
+	@Override
+	public Object readChat(SqlSession session, String fromID, String toID) {
+		// TODO Auto-generated method stub
+		TreeMap<String,String> map=new TreeMap<String,String>();
+		map.put("fromID",fromID);
+		map.put("toID",toID);
+		return session.insert("user.readChat",map);
 	}
 
 }

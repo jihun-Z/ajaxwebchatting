@@ -28,6 +28,8 @@ public interface WebChatDao {
 
 	List<Chat> getChatListByID(SqlSession session, String fromID, String toID, String chatId);
 
-	List<Chat> getChatListByRecent(SqlSession session, String fromID, String toID);
+	List<Chat> getChatListByRecent(SqlSession session, String fromID, String toID, int number);
+
+	Object readChat(SqlSession session, String fromID, String toID);
 
 }

@@ -183,4 +183,99 @@ tr th:last-child{
     border-radius: 4px;
     background-color: hotpink;
 }
+/* 전체링크 관련 영역 */
+a{
+	color:#bcc5c5;
+	text-decoration:none;
 }
+a:hover{
+	color:red;
+	font-weight: 500;
+	text_decoration: none;
+	cursor: pointer;
+	background-color:khaki;
+}
+/* 내기게이션 영역 */
+.navbar-default{
+	border-color:#006DCC;
+	border-bottom-color:#dddddd;
+	border-bottom-width:3px;
+	border-radius:0px;
+}
+.navbar-brand {
+    text-align: center;
+    float: left;
+    height: 50px;
+    padding: 25px 15px;
+    font-size: 18px;
+    line-height: 20px;
+}
+/* 내비게이션 제목에 마우스를 올렸을때 */
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus{
+	color:#dddddd;
+	background-color:transparent;
+}
+/* 선택된 내비게이션 색상 이벤트*/
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+	color:#ffffff;
+	background-color:#1456b8;
+}
+/* 내비게이션 글자 기본 폰트 설정*/
+.navbar-default .navbar-nav > li > a{
+	color:black;
+	font-family: 'Noto Sans KR';
+	
+}
+/* 내비게이션 글자에 마우스 올라가있을때 */
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus{
+	color: #ddd;
+}
+/*열린 드랍다운 마우스 색상 이벤트  */
+.navbar-default .navbar-nav > open > a,
+.navbar-default .navbar-nav > open > a:hover,
+.navbar-default .navbar-nav > open > a:focus{
+	color: #006DCC;
+	text-decoration:none;
+	background-color:#ffffff;
+}
+/*토글에 마우스 올렸을때 이벤트  */
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus{
+	background-color:#145688;
+}
+/* 토글 아이콘바  색상 */
+.navbar-default .navbar-toggle .icon-bar{
+	background-color:#dddddd;
+}
+/* 내비게이션 바 길이 수정  */
+.navbar-fixed-top{
+	min-height: 70px;
+}
+.navbar-nav > li > a{
+	padding-top: 0px;
+	padding-bottom: 0px;
+	line-height: 70px;
+}
+/* 작은 화면일때 드랍다운 아이템에 마우스를 올렸을때  */
+@media (max-width: 767px){
+	.navbar-default .navbar-nav .open .dropdown-menu > li > a{
+	color: #fff;
+	}
+	.navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
+	.navbar-default .navbar-nav .open .dropdown-menu > li > a:focus{
+		color:#eeeeee;
+	}
+	.navbar-default .navbar-brand{
+		padding-top:15px;
+	}
+	.navbar-nav > li > a{
+		padding-top:0px;
+		padding-bottom: 0px;
+		line-height: 40px;
+	}
+}
+
