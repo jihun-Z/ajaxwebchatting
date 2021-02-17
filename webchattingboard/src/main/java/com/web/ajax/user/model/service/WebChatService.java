@@ -18,7 +18,7 @@ public interface WebChatService {
 
 	int selectOneUser(String userID, String userPassword);
 
-	List<Chat> getChatListByRecent(String fromID, String toID, int number);
+	List<Chat> getChatListByRecent(String fromID, String toID);
 
 	List<Chat> getChatListByID(String fromID, String toID,String chatID);
 
@@ -27,6 +27,8 @@ public interface WebChatService {
 	Chat getChat(String fromID, String toID);
 
 	Object readChat(String fromID, String toID);
+
+	int getAllUnreadChat(String userID);
 
 
 }

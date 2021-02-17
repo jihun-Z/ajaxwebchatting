@@ -105,46 +105,6 @@ public class webChatController {
 		return loc;
 		
 	}
-//	@RequestMapping("")
-//	public String chat(Chat chat) {
-//		
-//		Chat map=service.chat();
-//		List<Chat> chatList=new ArrayList<Chat>();
-//		chat.setChatId(map.getChatId());
-//		chat.setFromId(map.getFromId().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
-//		chat.setToId(map.getToId().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
-//		chat.setChatContent(map.getChatContent().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
-//		int chatTime= Integer.parseInt(map.getChatTime().substring(11,13));
-//		String timeType="오전";
-//		if(chatTime >=12) {
-//			timeType ="오후";
-//			chatTime-= 12;
-//		}
-//		chat.setChatTime(map.getChatTime().substring(0,11)+" "+timeType+" "+chatTime+" : "+map.getChatTime().substring(14,16)+"");
-//		chatList.add(chat);
-//		return "";
-//	}
-//	@RequestMapping("")
-//	public String getChatListByRecent(Chat chat) {
-//		
-//		Chat map=service.chat(chat);
-//		List<Chat> chatList=new ArrayList<Chat>();
-//		Chat catt=new Chat();
-//		catt.setChatId(map.getChatId());
-//		catt.setFromId(map.getFromId().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
-//		catt.setToId(map.getToId().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
-//		catt.setChatContent(map.getChatContent().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
-//		int chatTime= Integer.parseInt(map.getChatTime().substring(11,13));
-//		String timeType="오전";
-//		if(chatTime >=12) {
-//			timeType ="오후";
-//			chatTime-= 12;
-//		}
-//		catt.setChatTime(map.getChatTime().substring(0,11)+" "+timeType+" "+chatTime+" : "+map.getChatTime().substring(14,16)+"");
-//		chatList.add(catt);
-//		return "";
-//	}
-	
 	@RequestMapping("/index.do")
 	public String index() {
 		return "index";
@@ -163,9 +123,11 @@ public class webChatController {
 		return "find";
 	}
 	@RequestMapping("/chat.do")
-	public String chatPage() {
-	
-		return "chat";
+	public ModelAndView chatPage(String toID,ModelAndView mv ) {
+		System.out.println("toID"+toID);
+		mv.addObject("toID",toID);
+		mv.setViewName("chat");
+		return mv;
 	}
 	
 	@RequestMapping("/logoutAction.do")
@@ -218,16 +180,18 @@ public class webChatController {
 	//chatSubmitServlet
 	@ResponseBody
 	@RequestMapping("/chatSubmit.do")
-	public int chatSubmit(Chat chat,Model m) {
+	public int chatSubmit(Chat chat) {
 		int result;
+		System.out.println("chat:"+chat);
 		if(chat.getFromID()==null|| chat.getFromID().equals("")||
 				chat.getToID() ==null || chat.getToID().equals("")||
 				chat.getChatContent() == null|| chat.getChatContent().equals("")) {
 			result=0;
-			
+			System.out.println(" submit result:"+result);
 		}else {
-			 result=service.submit(chat);
+			result=service.submit(chat);
 		}
+		System.out.println(" submit result:"+result);
 		return result;
 	}
 	//chatlistServlet 
@@ -262,8 +226,7 @@ public class webChatController {
 		StringBuffer result=new StringBuffer();
 		
 		result.append("{\"result\":[");
-		int number=20;//chatContent 불러올 갯수 
-		List<Chat> chatList=service.getChatListByRecent(fromID,toID,number);
+		List<Chat> chatList=service.getChatListByRecent(fromID,toID);
 		if(chatList.size() ==0 ) return "";
 		for(int i = 0; i <chatList.size(); i++) {
 			result.append("[{\"value\":\""+chatList.get(i).getFromID()+"\"},");
@@ -275,7 +238,7 @@ public class webChatController {
 		result.append("],\"last\":\""+chatList.get(chatList.size() -1)
 		.getChatId()+"\"}");
 		System.out.println(" getTen result:"+result.toString());
-		service.readChat(fromID,toID);
+		System.out.println("getTen 실행:"+(service.readChat(fromID,toID)));
 		return result.toString();//문자열로 반환해준다.
 		
 	}
@@ -296,7 +259,7 @@ public class webChatController {
 		.getChatId()+"\"}");
 		System.out.println("getId result:"+result.toString());
 		
-		service.readChat(fromID,toID);
+		System.out.println("getID 실행:"+(service.readChat(fromID,toID)));
 		return result.toString();//문자열로 반환해준다.
 		
 	}
@@ -304,10 +267,27 @@ public class webChatController {
 	@RequestMapping("/userRegisterCheck.do")
 	public int userRegisterCheck(String userID,Model m) {
 		int result;
-		if(userID==null || userID.equals("")) result= -1;
+		if(userID==null || userID.equals("")) result=-1;
 		
 		result=service.userRegisterCheck(userID);
 		return result;
+	}
+	@RequestMapping("")
+	public ModelAndView getAllUnreadChat(String userID,ModelAndView mv) {
+		int result=service.getAllUnreadChat(userID);
+		if(result == 0) {
+			mv.addObject("count","0");
+			mv.addObject("messageType","오류메세지");
+			mv.addObject("messageContent","메세지가 없습니다.");
+			mv.setViewName("index");
+		}else {
+			mv.addObject("count",result);
+			mv.addObject("messageType","성공메세지");
+			mv.addObject("messageContent","안 읽은 메세지가 있습니다.");
+			mv.setViewName("index");
+			
+		}
+		return mv;
 	}
 	
 }

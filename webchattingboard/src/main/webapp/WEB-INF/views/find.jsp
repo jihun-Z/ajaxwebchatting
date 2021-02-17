@@ -34,6 +34,7 @@
     	  $.ajax({
     		  type:"post",
     		  url:'${path}/userRegisterCheck.do',
+    		  contentType: 'application/x-www-form-urlencoded; charset=euc-kr',
     		  data:{userID:userID},
     		  success:function(result){
     			  if(result == 1 ){
@@ -51,6 +52,7 @@
     	  });
       }
       function getFriend(findID){
+    	  console.log("findID:"+findID);
     	  $("#friendResult").html('<thead'+
     			'<tr>'+
     			'<th><h4>검색 결과</h4></th>'+
