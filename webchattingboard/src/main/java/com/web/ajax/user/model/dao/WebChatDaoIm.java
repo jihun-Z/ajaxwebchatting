@@ -91,7 +91,7 @@ public class WebChatDaoIm implements WebChatDao {
 		TreeMap<String,String> map=new TreeMap<String,String>();
 		map.put("fromID",fromID);
 		map.put("toID",toID);
-		return session.insert("user.readChat",map);
+		return session.update("user.readChat",map);
 	}
 
 	@Override

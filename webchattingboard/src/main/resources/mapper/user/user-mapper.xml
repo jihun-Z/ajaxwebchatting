@@ -50,7 +50,7 @@
 		       select * from chat where fromid = #{fromID} and toID=#{toID}
 	</select>
 	
-	<update id="reaChat" parameterType="_int">
+	<update id="readChat" parameterType="chat">
 		update chat set chatRead= '1' where (fromId=#{fromID} and toID=#{toID})
 	</update>
 	<select id="getAllUnreadChat" resultType="_int">

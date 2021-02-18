@@ -247,6 +247,7 @@ public class webChatController {
 		.getChatId()+"\"}");
 		System.out.println(" getTen result:"+result.toString());
 		System.out.println("getTen 실행:"+(service.readChat(fromID,toID)));
+		service.readChat(fromID,toID);
 		return result.toString();//문자열로 반환해준다.
 		
 	}
@@ -268,6 +269,7 @@ public class webChatController {
 		System.out.println("getId result:"+result.toString());
 		
 		System.out.println("getID 실행:"+(service.readChat(fromID,toID)));
+		service.readChat(fromID,toID);
 		return result.toString();//문자열로 반환해준다.
 		
 	}
