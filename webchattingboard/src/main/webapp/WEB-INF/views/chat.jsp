@@ -61,9 +61,10 @@
      			type:"POST",
      			url:"${path}/chatSubmit.do",
      			data:{
-     				fromID:encodeURIComponent(fromID),
-     				toID:encodeURIComponent(toID),
-     				chatContent:chatContent//encodeURIComponent사용하지않는다. oracleDB으로  이상하게 저장됨
+     				fromID:fromID,
+     				toID:toID,
+     				chatContent:chatContent
+     				//encodeURIComponent사용하지않는다. oracleDB으로  이상하게 저장됨
      			},
      				success:function(result){
      					if(result == 1){

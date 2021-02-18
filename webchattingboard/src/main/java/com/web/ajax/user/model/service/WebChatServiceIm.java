@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.web.ajax.user.model.dao.WebChatDao;
@@ -18,6 +19,8 @@ public class WebChatServiceIm implements WebChatService {
 	SqlSession session;
 	@Autowired
 	WebChatDao dao;
+	@Autowired
+	BCryptPasswordEncoder pwEncoder;
 	@Override
 	public int insertUser(User user) {
 		// TODO Auto-generated method stub
@@ -47,7 +50,8 @@ public class WebChatServiceIm implements WebChatService {
 		System.out.println("user:"+user);
 			if(user != null) {
 				
-				if(user.getUserPassword().equals(userPassword)) {
+				//if(user.getUserPassword().equals(userPassword)) {
+					if(user != null && pwEncoder.matches(userPassword,user.getUserPassword())) {
 					result=1;//로그인 성공
 				}else {
 					result=2;//비밀번호가 틀림
@@ -129,6 +133,11 @@ public class WebChatServiceIm implements WebChatService {
 	public int getAllUnreadChat(String userID) {
 		// TODO Auto-generated method stub
 		return dao.getAllUnreadChat(session,userID);
+	}
+	@Override
+	public User selectUser(String userID) {
+		// TODO Auto-generated method stub
+		return dao.selectOneUser(session, userID);
 	}
 	
 

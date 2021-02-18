@@ -56,4 +56,7 @@
 	<select id="getAllUnreadChat" resultType="_int">
 		select count(chatID) from chat where toID=#{userID} and chatRead='0'
 	</select>
+	<select id="selectUser" resultType="user">
+		select * from member where userID=#{userID}
+	</select>
 </mapper>

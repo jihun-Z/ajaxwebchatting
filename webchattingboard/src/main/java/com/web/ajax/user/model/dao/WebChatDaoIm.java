@@ -100,4 +100,10 @@ public class WebChatDaoIm implements WebChatDao {
 		return session.selectOne("user.getAllUnreadChat",userID);
 	}
 
+	@Override
+	public User selectUser(SqlSession session, String userID) {
+		// TODO Auto-generated method stub
+		return session.selectOne("user.selectUser",userID);
+	}
+
 }

@@ -34,4 +34,6 @@ public interface WebChatDao {
 
 	int getAllUnreadChat(SqlSession session, String userID);
 
+	User selectUser(SqlSession session, String userID);
+
 }

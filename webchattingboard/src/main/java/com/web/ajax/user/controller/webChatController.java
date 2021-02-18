@@ -149,28 +149,31 @@ public class webChatController {
 			mv.addObject("messageContent","모든 내용을 입력하세요.");
 			mv.setViewName("login");
 		}
-		int result=service.selectOneUser(userID,userPassword);
-		System.out.println("result:"+result);
-		String loc="";
-		if(result == 1) {
-			mv.addObject("userID",userID);
-			mv.addObject("messageType","성공 메시지");
-			mv.addObject("messageContent","로그인에 성공하였습니다.");
-			//loc="redirect:/";
-			mv.setViewName("index");
-		}else if( result==2) {
-			mv.addObject("messageType","오류 메시지");
-			mv.addObject("messageContent","비밀번호를 다시 확인 하세요 ");
-			mv.setViewName("login");
-			loc="redirect:login";
-		}else if(result==0) {
-			mv.addObject("messageType","오류 메시지");
-			mv.addObject("messageContent","아이디가 존재 하지 않습니다. ");
-			mv.setViewName("login");
-		}else if(result == -1) {
-			mv.addObject("messageType","오류 메시지");
-			mv.addObject("messageContent","데이터베이스 오류가 발생했습니다.");
-			mv.setViewName("login");
+		else {
+			
+			int result=service.selectOneUser(userID,userPassword);
+			System.out.println("result:"+result);
+			String loc="";
+			if(result == 1) {
+				mv.addObject("userID",userID);
+				mv.addObject("messageType","성공 메시지");
+				mv.addObject("messageContent","로그인에 성공하였습니다.");
+				//loc="redirect:/";
+				mv.setViewName("index");
+			}else if( result==2) {
+				mv.addObject("messageType","오류 메시지");
+				mv.addObject("messageContent","비밀번호를 다시 확인 하세요 ");
+				mv.setViewName("login");
+				loc="redirect:login";
+			}else if(result==0) {
+				mv.addObject("messageType","오류 메시지");
+				mv.addObject("messageContent","아이디가 존재 하지 않습니다. ");
+				mv.setViewName("login");
+			}else if(result == -1) {
+				mv.addObject("messageType","오류 메시지");
+				mv.addObject("messageContent","데이터베이스 오류가 발생했습니다.");
+				mv.setViewName("login");
+			}
 		}
 		System.out.println("mv:"+mv);
 		return mv;
@@ -180,15 +183,20 @@ public class webChatController {
 	//chatSubmitServlet
 	@ResponseBody
 	@RequestMapping("/chatSubmit.do")
-	public int chatSubmit(Chat chat) {
+	public int chatSubmit(String fromID,String toID,String chatContent) {
 		int result;
+		Chat chat=new Chat();
+		System.out.println("toID: "+toID);
 		System.out.println("chat:"+chat);
-		if(chat.getFromID()==null|| chat.getFromID().equals("")||
-				chat.getToID() ==null || chat.getToID().equals("")||
-				chat.getChatContent() == null|| chat.getChatContent().equals("")) {
+		if(fromID==null|| fromID.equals("")||
+				toID ==null || toID.equals("")||
+						chatContent == null|| chatContent.equals("")) {
 			result=0;
 			System.out.println(" submit result:"+result);
 		}else {
+			chat.setFromID(fromID);
+			chat.setToID(toID);
+			chat.setChatContent(chatContent);
 			result=service.submit(chat);
 		}
 		System.out.println(" submit result:"+result);
