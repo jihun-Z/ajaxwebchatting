@@ -36,4 +36,6 @@ public interface WebChatDao {
 
 	User selectUser(SqlSession session, String userID);
 
+	List<Chat> getBox(SqlSession session, String userID);
+
 }

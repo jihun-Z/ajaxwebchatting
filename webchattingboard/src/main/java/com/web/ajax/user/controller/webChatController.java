@@ -246,7 +246,6 @@ public class webChatController {
 		result.append("],\"last\":\""+chatList.get(chatList.size() -1)
 		.getChatId()+"\"}");
 		System.out.println(" getTen result:"+result.toString());
-		System.out.println("getTen 실행:"+(service.readChat(fromID,toID)));
 		service.readChat(fromID,toID);
 		return result.toString();//문자열로 반환해준다.
 		
@@ -257,6 +256,7 @@ public class webChatController {
 		result.append("{\"result\":[");
 		List<Chat> chatList=service.getChatListByID(fromID,toID,listType);
 		if(chatList.size() ==0 ) return "";
+		System.out.println("chatList: 이거 이상함"+chatList);
 		for(int i = 0; i <chatList.size(); i++) {
 			result.append("[{\"value\":\""+chatList.get(i).getFromID()+"\"},");
 			result.append("{\"value\":\""+chatList.get(i).getToID()+"\"},");
@@ -267,8 +267,6 @@ public class webChatController {
 		result.append("],\"last\":\""+chatList.get(chatList.size() -1)
 		.getChatId()+"\"}");
 		System.out.println("getId result:"+result.toString());
-		
-		System.out.println("getID 실행:"+(service.readChat(fromID,toID)));
 		service.readChat(fromID,toID);
 		return result.toString();//문자열로 반환해준다.
 		
@@ -282,22 +280,54 @@ public class webChatController {
 		result=service.userRegisterCheck(userID);
 		return result;
 	}
-	@RequestMapping("")
-	public ModelAndView getAllUnreadChat(String userID,ModelAndView mv) {
-		int result=service.getAllUnreadChat(userID);
-		if(result == 0) {
-			mv.addObject("count","0");
-			mv.addObject("messageType","오류메세지");
-			mv.addObject("messageContent","메세지가 없습니다.");
-			mv.setViewName("index");
+	@ResponseBody
+	@RequestMapping("/chatUnread.do")
+	public int getAllUnreadChat(String userID) {
+		int result;
+		if(userID == null || userID.equals("")) {
+			result=0;
 		}else {
-			mv.addObject("count",result);
-			mv.addObject("messageType","성공메세지");
-			mv.addObject("messageContent","안 읽은 메세지가 있습니다.");
-			mv.setViewName("index");
 			
+			result=service.getAllUnreadChat(userID);
 		}
-		return mv;
+
+		return result;
+	}
+	@RequestMapping("/box.do")
+	public String box() {
+		return "box";
+	}
+	@ResponseBody
+	@RequestMapping("/chatbox.do")
+	public void getBox(String userID,HttpServletResponse response) throws Exception {
+		response.setContentType("text/html;charset=UTF-8");;
+		if(userID==null || userID.equals("")) {
+			response.getWriter().write("");
+		}
+		else {
+			try {
+				response.getWriter().write(getBoxx(userID));
+			}catch(Exception e) {
+					response.getWriter().write("");
+				}
+		}
+	}
+	public String getBoxx(String userID) {
+		System.out.println("getID: 실행");
+		StringBuffer result=new StringBuffer();
+		result.append("{\"result\":[");
+		List<Chat> chatList=service.getBox(userID);
+		if(chatList.size() ==0 ) return "";
+		for(int i = 0; i <chatList.size(); i++) {
+			result.append("[{\"value\":\""+chatList.get(i).getFromID()+"\"},");
+			result.append("{\"value\":\""+chatList.get(i).getToID()+"\"},");
+			result.append("{\"value\":\""+chatList.get(i).getChatContent()+"\"},");
+			result.append("{\"value\":\""+chatList.get(i).getChatTime()+"\"}]");
+			if(i != chatList.size() -1 ) result.append(",");//더있다면 ,를찍어라
+		}
+		result.append("],\"last\":\""+chatList.get(chatList.size() -1)
+		.getChatId()+"\"}");
+		return result.toString();//문자열로 반환해준다.
 	}
 	
 }

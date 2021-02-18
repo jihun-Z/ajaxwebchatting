@@ -71,7 +71,29 @@
     	function failFriend(){
     		  $("#friendResult").html("");
     	  };
-      
+    	  //안 읽은 메세지함 불러오기 
+       	function getUnread(){
+     		$.ajax({
+     			type:"post",
+     			url:'${path}/chatUnread.do',
+     			data:{
+     				userID:'<c:out value="${userID}"/>'
+     			},
+     			success:function(result){
+     				if(result == 0){
+     					return;
+     				}else{
+     					showUnread(result);
+     				}
+     			}
+     		});
+     	}
+     	function getInfiniteUnread(){
+				getUnread();
+     	}
+     	function showUnread(result){
+     		$("#unread").html(result);
+     	}
      </script>
 </head>
 <body>
@@ -91,6 +113,7 @@
 			<ul class="nav navbar-nav">
 				<li ><a href="${path }/index.do">메인</a></li>
 				<li class="active" ><a href="${path }/find.do">친구찾기</a></li>
+				<li ><a href="${path }/box.do">메시지함<span id="unread" class="label label-info"></span></a></li>
 			</ul>
 				<ul class="nav navbar-nav navbar-right">
 						<li class="dropdown">
@@ -195,5 +218,13 @@
 			</div>
 		</div>
 	</div>
+		<c:if test="${userID != null }">
+		<script type="text/javascript">
+			$(document).ready(function(){
+				getUnread();
+				getInfiniteUnread();
+			});
+		</script>
+	</c:if>
 </body>
 </html>

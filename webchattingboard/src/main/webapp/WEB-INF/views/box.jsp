@@ -9,6 +9,12 @@
 		if(session.getAttribute("userID") != null){
 			userID =(String) session.getAttribute("userID");
 		}
+		if(userID == null ){
+			session.setAttribute("messageType","오류메세지");
+			session.setAttribute("messageContent","현재 로그인이 되어 있지 않습니다.");
+			response.sendRedirect("index.do");
+			return;
+		}
 	%> 
      
 <!DOCTYPE html>
@@ -33,18 +39,58 @@
      			},
      			success:function(result){
      				if(result == 0){
-     					return;
+     					showUnread('0');
      				}else{
      					showUnread(result);
      				}
      			}
      		});
-     	}
+     	};
      	function getInfiniteUnread(){
-				getUnread();
+     		getUnread();
      	}
      	function showUnread(result){
      		$("#unread").html(result);
+     	}
+     	function chatBoxFunction(){
+     		const userID='<c:out value="${userID}"/>';
+     		$.ajax({
+     			type:'post',
+     			url:'${path}/chatbox.do',
+     			data:{
+     				userID:userID
+     			},
+     			success: function(data){
+     				if(data == "" ) return;
+     				$("#boxTable").html('');
+     				let parsed= JSON.parse(data);
+     				let result=parsed.result;
+     				console.log("data:"+data);
+     				for( let i =0; i < result.length; i++){
+	     				if(result[i][0].value == userID){
+	     					//아이디를 대입하는코드
+	     					result[i][0].value = result[i][1].value;
+	     				}else{
+	     					result[i][1].value = result[i][0].value;
+	     				}
+	     				//각각의 목록을 출력해주는  함수 
+	     				addBox(result[i][0].value,result[i][1].value,result[i][2].value,result[i][3].value);
+     				}
+     			}
+     		});
+     	}
+     	function addBox(lastID,toID,chatContent,chatTime){
+     		console.log("lastID:"+lastID);
+     		$('#boxTable').append('<tr onclick="location.href=\'${path}/chat.do?toID='+toID+'\'">'+
+     				'<td style="width: 150px;"><h5>' + lastID + '</h5></td>' +
+     				'<td>' +
+     				'<h5>' + chatContent +'</h5>' +
+     				'<div class="pull-right">' + chatTime + '</div>' +
+     				'</td>'+
+     				'</tr>');
+     	}
+     	function getInfiniteBox(){
+     		chatBoxFunction();
      	}
      </script>
 </head>
@@ -66,7 +112,7 @@
 				<li ><a href="${path }/index.do">메인</a></li>
 				<li ><a href="${path }/find.do">친구찾기</a></li>
 				<li ><a href="${path }/chat.do">채팅</a></li>
-				<li ><a href="${path }/box.do">메시지함<span id="unread" class="label label-info"></span></a></li>
+				<li class="active" ><a href="${path }/box.do">메시지함<span id="unread" class="label label-info"></span></a></li>
 				
 			</ul>
 		<c:if test="${userID == null }">
@@ -99,6 +145,21 @@
 			</c:if>
 		</div>
 	</nav>
+	<div class="container">
+		<table class="table" style="margin: 0 auto;">
+			<thead>
+				<tr>
+					<th><h4>주고받은 메세지 목록</h4></th>
+				</tr>
+			</thead>
+			<div style="overflow-y:auto; width: 100%; max-height: 450px;">
+				<table class="table table-bordered table-hover" style="text-align: center; border: 1px solid #dddddd; margin: 0 auto;">
+					<tbody id="boxTable">
+					</tbody>
+				</table>
+			</div>
+		</table>
+	</div>
 <%
 	String messageContent = null;
 	if(session.getAttribute("messageContent") != null){
@@ -146,7 +207,10 @@
 	<c:if test="${userID != null }">
 		<script type="text/javascript">
 			$(document).ready(function(){
+				getUnread();
 				getInfiniteUnread();
+				chatBoxFunction();
+				getInfiniteBox();
 			});
 		</script>
 	</c:if>

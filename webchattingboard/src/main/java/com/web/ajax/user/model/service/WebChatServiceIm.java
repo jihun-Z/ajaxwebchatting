@@ -92,24 +92,72 @@ public class WebChatServiceIm implements WebChatService {
 		return chatList;
 	}
 	@Override
+	public List<Chat> getBox(String userID) {
+		List<Chat> map=dao.getBox(session,userID);
+		System.out.println("Map[Service]:"+map);
+		Chat chat=new Chat();
+		
+		List<Chat> chatList=new ArrayList<Chat>();
+		for(Chat chat1: map) {
+			if(chat !=null ) {
+				
+				chat.setChatId(chat1.getChatId());
+				chat.setFromID(chat1.getFromID().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
+				chat.setToID(chat1.getToID().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
+				chat.setChatContent(chat1.getChatContent().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
+				String timeChat=chat1.getChatTime();
+				int chatTime= Integer.parseInt(chat1.getChatTime().substring(11,13));
+				String timeType="오전";
+				if(chatTime >=12) {
+					timeType ="오후";
+					chatTime-= 12;
+				}
+				chat.setChatTime(chat1.getChatTime().substring(0,11)+" "+timeType+" "+chatTime+" : "+chat1.getChatTime().substring(14,16)+"");
+				chatList.add(chat);
+				System.out.println("chatList:"+chatList);
+			}
+		}
+		for(int i=0;i<chatList.size();i++) {
+			Chat x=chatList.get(i);
+			for(int j=0;j< chatList.size(); j++) {
+				Chat y=chatList.get(j);
+				//두개의메세지를 비교
+				//M메세지의 보내는 사람이 x 다른메세지의 받는 사람이 y 와 같고
+				//다른 메세지 받는사람 y가 특정메세지의 보내는사람과 같은지 비교
+				if(x.getFromID().equals(y.getToID()) && x.getToID().equals(y.getFromID())) {
+					if(x.getChatId() < y.getChatId()) {
+						chatList.remove(x);
+						i--;
+						break;
+					}else {
+						chatList.remove(y);
+						j--;
+					}
+				}
+			}
+		}
+		System.out.println("service getBox : "+chatList);
+		return chatList;
+	}
+	@Override
 	public List<Chat> getChatListByID(String fromID, String toID, String chatID) {
 		List<Chat> map=dao.getChatListByID(session,fromID,toID,chatID);
 		Chat chat=new Chat();
 		List<Chat> chatList=new ArrayList<Chat>();
 		for(Chat chat1: map) {
-			
-			chat.setChatId(chat1.getChatId());
-			chat.setFromID(chat1.getFromID().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
-			chat.setToID(chat1.getToID().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
-			chat.setChatContent(chat1.getChatContent().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
-			int chatTime= Integer.parseInt(chat1.getChatTime().substring(11,13));
-			String timeType="오전";
-			if(chatTime >=12) {
-				timeType ="오후";
-				chatTime-= 12;
-			}
-			chat.setChatTime(chat1.getChatTime().substring(0,11)+" "+timeType+" "+chatTime+" : "+chat1.getChatTime().substring(14,16)+"");
-			chatList.add(chat);
+				
+				chat.setChatId(chat1.getChatId());
+				chat.setFromID(chat1.getFromID().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
+				chat.setToID(chat1.getToID().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
+				chat.setChatContent(chat1.getChatContent().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
+				int chatTime= Integer.parseInt(chat1.getChatTime().substring(11,13));
+				String timeType="오전";
+				if(chatTime >=12) {
+					timeType ="오후";
+					chatTime-= 12;
+				}
+				chat.setChatTime(chat1.getChatTime().substring(0,11)+" "+timeType+" "+chatTime+" : "+chat1.getChatTime().substring(14,16)+"");
+				chatList.add(chat);
 		}
 		System.out.println("service ID : "+chatList);
 		return chatList;
@@ -139,6 +187,7 @@ public class WebChatServiceIm implements WebChatService {
 		// TODO Auto-generated method stub
 		return dao.selectOneUser(session, userID);
 	}
+
 	
 
 }

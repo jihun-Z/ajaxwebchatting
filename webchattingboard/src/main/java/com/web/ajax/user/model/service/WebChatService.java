@@ -32,5 +32,7 @@ public interface WebChatService {
 
 	User selectUser(String userID);
 
+	List<Chat> getBox(String userID);
+
 
 }

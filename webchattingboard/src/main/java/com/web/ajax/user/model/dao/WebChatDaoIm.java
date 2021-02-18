@@ -106,4 +106,10 @@ public class WebChatDaoIm implements WebChatDao {
 		return session.selectOne("user.selectUser",userID);
 	}
 
+	@Override
+	public List<Chat> getBox(SqlSession session, String userID) {
+		// TODO Auto-generated method stub
+		return session.selectList("user.getBox",userID);
+	}
+
 }
