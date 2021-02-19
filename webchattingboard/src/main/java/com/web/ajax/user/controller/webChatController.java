@@ -245,7 +245,6 @@ public class webChatController {
 		}
 		result.append("],\"last\":\""+chatList.get(chatList.size() -1)
 		.getChatId()+"\"}");
-		System.out.println(" getTen result:"+result.toString());
 		service.readChat(fromID,toID);
 		return result.toString();//문자열로 반환해준다.
 		
@@ -256,7 +255,7 @@ public class webChatController {
 		result.append("{\"result\":[");
 		List<Chat> chatList=service.getChatListByID(fromID,toID,listType);
 		if(chatList.size() ==0 ) return "";
-		System.out.println("chatList: 이거 이상함"+chatList);
+		System.out.println("chatList: "+chatList);
 		for(int i = 0; i <chatList.size(); i++) {
 			result.append("[{\"value\":\""+chatList.get(i).getFromID()+"\"},");
 			result.append("{\"value\":\""+chatList.get(i).getToID()+"\"},");
@@ -266,7 +265,6 @@ public class webChatController {
 		}
 		result.append("],\"last\":\""+chatList.get(chatList.size() -1)
 		.getChatId()+"\"}");
-		System.out.println("getId result:"+result.toString());
 		service.readChat(fromID,toID);
 		return result.toString();//문자열로 반환해준다.
 		

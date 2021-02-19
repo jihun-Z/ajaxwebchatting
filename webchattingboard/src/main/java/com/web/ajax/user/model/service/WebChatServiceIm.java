@@ -1,6 +1,7 @@
 package com.web.ajax.user.model.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -67,11 +68,11 @@ public class WebChatServiceIm implements WebChatService {
 	public List<Chat> getChatListByRecent(String fromID, String toID) {
 		List<Chat> map=dao.getChatListByRecent(session,fromID,toID);
 		System.out.println("Map[Service]:"+map);
-		Chat chat=new Chat();
 		
 		List<Chat> chatList=new ArrayList<Chat>();
 		for(Chat chat1: map) {
-			if(chat !=null ) {
+		
+				Chat chat=new Chat();
 				
 				chat.setChatId(chat1.getChatId());
 				chat.setFromID(chat1.getFromID().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
@@ -86,7 +87,7 @@ public class WebChatServiceIm implements WebChatService {
 				}
 				chat.setChatTime(chat1.getChatTime().substring(0,11)+" "+timeType+" "+chatTime+" : "+chat1.getChatTime().substring(14,16)+"");
 				chatList.add(chat);
-			}
+			
 		}
 		System.out.println("service ten : "+chatList);
 		return chatList;
@@ -95,12 +96,10 @@ public class WebChatServiceIm implements WebChatService {
 	public List<Chat> getBox(String userID) {
 		List<Chat> map=dao.getBox(session,userID);
 		System.out.println("Map[Service]:"+map);
-		Chat chat=new Chat();
-		
 		List<Chat> chatList=new ArrayList<Chat>();
 		for(Chat chat1: map) {
-			if(chat !=null ) {
-				
+			Chat chat=new Chat();
+			
 				chat.setChatId(chat1.getChatId());
 				chat.setFromID(chat1.getFromID().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
 				chat.setToID(chat1.getToID().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
@@ -114,8 +113,8 @@ public class WebChatServiceIm implements WebChatService {
 				}
 				chat.setChatTime(chat1.getChatTime().substring(0,11)+" "+timeType+" "+chatTime+" : "+chat1.getChatTime().substring(14,16)+"");
 				chatList.add(chat);
-				System.out.println("chatList:"+chatList);
-			}
+				System.out.println("get box"+chatList);
+			
 		}
 		for(int i=0;i<chatList.size();i++) {
 			Chat x=chatList.get(i);
@@ -142,9 +141,10 @@ public class WebChatServiceIm implements WebChatService {
 	@Override
 	public List<Chat> getChatListByID(String fromID, String toID, String chatID) {
 		List<Chat> map=dao.getChatListByID(session,fromID,toID,chatID);
-		Chat chat=new Chat();
+	
 		List<Chat> chatList=new ArrayList<Chat>();
 		for(Chat chat1: map) {
+			Chat chat=new Chat();
 				
 				chat.setChatId(chat1.getChatId());
 				chat.setFromID(chat1.getFromID().replace(" ", "&nbsp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));

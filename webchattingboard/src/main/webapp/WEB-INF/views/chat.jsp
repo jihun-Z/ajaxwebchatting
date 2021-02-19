@@ -69,6 +69,7 @@
      				success:function(result){
      					if(result == 1){
      						autoClosingAlert("#successMessage",3000);
+     						getInfiniteChat();
      					}else if(result== 0){
      						autoClosingAlert("#dangerMessage",3000);
      					}else{
@@ -113,7 +114,7 @@
      	function addChat(chatName, chatContent,chatTime){
      		
      		console.log("addchat 실행");
-     		$('#chatList').html('<div class="row">'+
+     		$('#chatList').append('<div class="row">'+
      		'<div class="col-lg-12">' +
      		'<div class="media">'+
      		'<a class="pull-left" href="#">'+
@@ -138,9 +139,9 @@
      	
      	/* 새로운 메시지를 가져올때마다 시간체크하는 함수 */
      	function getInfiniteChat(){
-     	 	setInterval(function(){
+     	 	
      			chatListFunction(lastID);
-     		},3000); 
+     	
      	}
   	  //안 읽은 메세지함 불러오기 
        	function getUnread(){
