@@ -122,6 +122,7 @@
 							aria-expanded="false">회원관리<span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
+								<li><a href="${path }/update.do?userID=<c:out value="${userID}"/>">회원정보수정</a></li>
 								<li><a href="${path }/logoutAction.do">로그아웃</a></li>
 						
 							</ul>

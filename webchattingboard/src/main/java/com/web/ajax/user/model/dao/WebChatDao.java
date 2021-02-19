@@ -38,4 +38,8 @@ public interface WebChatDao {
 
 	List<Chat> getBox(SqlSession session, String userID);
 
+	int getUnreadChat(SqlSession session, String fromID, String toID);
+
+	int update(SqlSession session, User user);
+
 }

@@ -187,6 +187,16 @@ public class WebChatServiceIm implements WebChatService {
 		// TODO Auto-generated method stub
 		return dao.selectOneUser(session, userID);
 	}
+	@Override
+	public int getUnreadChat(String fromID, String toID) {
+		// TODO Auto-generated method stub
+		return dao.getUnreadChat(session,fromID,toID);
+	}
+	@Override
+	public int update(User user) {
+		// TODO Auto-generated method stub
+		return dao.update(session,user);
+	}
 
 	
 

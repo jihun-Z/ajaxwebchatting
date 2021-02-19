@@ -34,5 +34,9 @@ public interface WebChatService {
 
 	List<Chat> getBox(String userID);
 
+	int getUnreadChat(String fromID, String toID);
+
+	int update(User user);
+
 
 }

@@ -112,4 +112,19 @@ public class WebChatDaoIm implements WebChatDao {
 		return session.selectList("user.getBox",userID);
 	}
 
+	@Override
+	public int getUnreadChat(SqlSession session, String fromID, String toID) {
+		// TODO Auto-generated method stub
+		Chat chat=new Chat();
+		chat.setFromID(fromID);
+		chat.setToID(toID);
+		return session.selectOne("user.getUnreadChat",chat);
+	}
+
+	@Override
+	public int update(SqlSession session, User user) {
+		// TODO Auto-generated method stub
+		return session.update("user.update",user);
+	}
+
 }

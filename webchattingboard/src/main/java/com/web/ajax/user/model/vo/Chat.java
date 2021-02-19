@@ -21,4 +21,6 @@ public class Chat {
 	private String chatContent;
 	private String chatTime;
 	private int chatRead;
+
+	
 }

@@ -28,7 +28,13 @@
 			session.setAttribute("messageContent","대화상대가 지정되어 있지않습니다.");
 			response.sendRedirect("index.do");
 			return;
-		}   
+		}
+		if(userID.equals(toID)){
+			session.setAttribute("messageType","오류메세지");
+			session.setAttribute("messageContent","자기 자신에게 메세지를 보낼수 없습니다.");
+			response.sendRedirect("index.do");
+			return;
+		}
 	%> 
 	
 <!DOCTYPE html>
@@ -72,8 +78,10 @@
      						getInfiniteChat();
      					}else if(result== 0){
      						autoClosingAlert("#dangerMessage",3000);
+     						getInfiniteChat();
      					}else{
      						autoClosingAlert("#worningMessage",3000);
+     						getInfiniteChat();
      					}
      				}
      		});
@@ -194,6 +202,7 @@
 						aria-expanded="false">회원관리<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
+							<li><a href="${path }/update.do?userID=<c:out value="${userID}"/>">회원정보수정</a></li>
 							<li><a href="${path }/logoutAction.do">로그아웃</a></li>
 					
 						</ul>

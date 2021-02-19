@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
@@ -183,7 +184,7 @@ public class webChatController {
 	//chatSubmitServlet
 	@ResponseBody
 	@RequestMapping("/chatSubmit.do")
-	public int chatSubmit(String fromID,String toID,String chatContent) {
+	public int chatSubmit(String fromID,String toID,String chatContent,HttpServletResponse response,HttpSession session) {
 		int result;
 		Chat chat=new Chat();
 		System.out.println("toID: "+toID);
@@ -193,7 +194,20 @@ public class webChatController {
 						chatContent == null|| chatContent.equals("")) {
 			result=0;
 			System.out.println(" submit result:"+result);
-		}else {
+		}else if(fromID.equals(toID)) {
+			result=-1;
+		}
+		else {
+				try {
+					if(!fromID.equals(session.getAttribute("userID"))) {
+					response.getWriter().write("");
+					}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				
+			
+			}
 			chat.setFromID(fromID);
 			chat.setToID(toID);
 			chat.setChatContent(chatContent);
@@ -205,7 +219,8 @@ public class webChatController {
 	//chatlistServlet 
 	@ResponseBody
 	@RequestMapping("/chatList.do")
-	public void chatList(String fromID,String toID,String listType,HttpServletResponse response) throws Exception {
+	public void chatList(String fromID,String toID,String listType,
+			HttpSession session,HttpServletResponse response) throws Exception {
 		
 		response.setContentType("text/html;charset=UTF-8");;
 		System.out.println(""+listType);
@@ -222,6 +237,10 @@ public class webChatController {
 				response.getWriter().write(getTen(URLDecoder.decode(fromID,"UTF-8"),URLDecoder.decode(toID,"UTF-8")));
 		else {
 			try {
+				if(!fromID.equals(session.getAttribute("userID"))) {
+					response.getWriter().write("");
+					return;
+				}
 				response.getWriter().write(getID(URLDecoder.decode(fromID,"UTF-8"),URLDecoder.decode(toID,"UTF-8"),listType));
 			}catch(Exception e) {
 					response.getWriter().write("");
@@ -291,19 +310,37 @@ public class webChatController {
 
 		return result;
 	}
+	@ResponseBody
+	@RequestMapping("/chatUnreadMessage.do")
+	public int getUnreadChat(String fromID,String toID) {
+		int result;
+		if(fromID == null || fromID.equals("")||
+				toID == null || toID.equals("")) {
+			result=0;
+		}else {
+			
+			result=service.getUnreadChat(fromID,toID);
+		}
+		
+		return result;
+	}
 	@RequestMapping("/box.do")
 	public String box() {
 		return "box";
 	}
 	@ResponseBody
 	@RequestMapping("/chatbox.do")
-	public void getBox(String userID,HttpServletResponse response) throws Exception {
+	public void getBox(String userID,HttpServletResponse response,HttpSession session,Model m) throws Exception {
 		response.setContentType("text/html;charset=UTF-8");;
 		if(userID==null || userID.equals("")) {
 			response.getWriter().write("");
 		}
 		else {
 			try {
+				if(!userID.equals(session.getAttribute("userID"))) {
+					response.getWriter().write("");
+					return;
+				}
 				response.getWriter().write(getBoxx(userID));
 			}catch(Exception e) {
 					response.getWriter().write("");
@@ -314,18 +351,74 @@ public class webChatController {
 		System.out.println("getID: 실행");
 		StringBuffer result=new StringBuffer();
 		result.append("{\"result\":[");
+		Chat chat=new Chat();
 		List<Chat> chatList=service.getBox(userID);
 		if(chatList.size() ==0 ) return "";
-		for(int i = 0; i <chatList.size(); i++) {
+		for(int i = chatList.size() -1; i >=0; i++) {
+			String unread = "";
+			if(userID.equals(chatList.get(i).getToID())) {
+				unread= service.getUnreadChat(chatList.get(i).getFromID(),userID)+ "";
+				if(unread.equals("0")) unread = "";
+			}
 			result.append("[{\"value\":\""+chatList.get(i).getFromID()+"\"},");
 			result.append("{\"value\":\""+chatList.get(i).getToID()+"\"},");
 			result.append("{\"value\":\""+chatList.get(i).getChatContent()+"\"},");
-			result.append("{\"value\":\""+chatList.get(i).getChatTime()+"\"}]");
-			if(i != chatList.size() -1 ) result.append(",");//더있다면 ,를찍어라
+			result.append("{\"value\":\""+chatList.get(i).getChatTime()+"\"},");
+			result.append("{\"value\":\""+unread+"\"}]");
+			if(i != 0 ) result.append(",");//더있다면 ,를찍어라
 		}
 		result.append("],\"last\":\""+chatList.get(chatList.size() -1)
 		.getChatId()+"\"}");
 		return result.toString();//문자열로 반환해준다.
+	}
+	@RequestMapping("/update.do")
+	public ModelAndView updatePage(ModelAndView mv,String userID) {
+		System.out.println("userID:"+userID);
+		User user=service.selectUser(userID);
+		mv.addObject("user",user);
+		mv.setViewName("update");
+		return mv;
+	}
+	@RequestMapping("/updateEnd.do")
+	public ModelAndView updateUser(User user,@RequestParam(value="userPassword1") String userPassword1 , HttpSession session,ModelAndView mv) {
+		if(user.getUserID()==null|| user.getUserID().equals("")||user.getUserPassword()==null||
+				user.getUserPassword().contentEquals("")|| user.getUserName()==null|| user.getUserName().equals("")||
+				user.getUserGender()==null||user.getUserGender().equals("")||
+				user.getEmail()==null||user.getEmail().equals("")) {
+			mv.addObject("messageType","오류메시지");
+			mv.addObject("messageContent","모든 내용을 입력하세요.");
+			mv.setViewName("update");
+		}
+		if(!user.getUserID().equals(session.getAttribute("userID"))) {
+			mv.addObject("messageType","오류메세지");
+			mv.addObject("messageContent","회원 아이디를 제대로 입력하세요. ");
+			mv.setViewName("redirect:/update.do");
+		
+		}else if(!user.getUserPassword().equals(userPassword1)){
+			mv.addObject("messageType","오류메세지");
+			mv.addObject("messageContent","비밀번호가 틀립니다.");
+			mv.setViewName("redirect:/update.do");
+		}else {
+			int result=service.update(user);
+			if(result == 1) {
+				
+				mv.addObject("messageType","성공메세지");
+				mv.addObject("messageContent","회원 정보를 수정하였습니다.");
+				mv.addObject("1",result);
+				mv.setViewName("login");
+			}else if(result == 0){
+				mv.addObject("messageType","오류메세지");
+				mv.addObject("messageContent","회원정보 수정에 실패하였습니다.");
+				mv.addObject("result",result);
+				mv.setViewName("redirect:/update.do");
+			}else {
+				mv.addObject("messageType","오류메세지");
+				mv.addObject("messageContent","회원정보 수정에 실패하였습니다.");
+				mv.addObject("result",result);
+				mv.setViewName("redirect:/update.do");
+			}
+		}
+		return mv;
 	}
 	
 }
