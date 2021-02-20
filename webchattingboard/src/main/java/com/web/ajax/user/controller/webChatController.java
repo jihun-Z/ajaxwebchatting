@@ -1,7 +1,9 @@
 package com.web.ajax.user.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.web.ajax.user.model.service.WebChatService;
@@ -420,5 +423,77 @@ public class webChatController {
 		}
 		return mv;
 	}
+	//프로필 jsp로 전환
+	@RequestMapping("/profileUpdate.do")
+	public ModelAndView profileUpdate(ModelAndView mv, String userID) {
+		User user=service.selectUser(userID);
+		mv.addObject("user",user);
+		mv.setViewName("profileUpdate");
+		return mv;
+	}
 	
+	//프로필 업데이트 등록
+	@RequestMapping("/profileUpdateEnd.do")
+	public ModelAndView profileUpdateEnd(String userID,ModelAndView mv,
+			@RequestParam(value="profile")MultipartFile profile,HttpSession session){
+		System.out.println("profile:"+profile.getOriginalFilename());
+		User user=new User();
+//		String path=session.getServletContext().getRealPath("/resources/upload/profile");
+//		File dir=new File(path);
+//		String originalFileName=profile.getOriginalFilename();
+//		String extension=originalFileName.substring(originalFileName.lastIndexOf(".")+1);
+//		SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+//		int rnd=(int)(Math.random()*10000);
+//		String rename=sdf.format(System.currentTimeMillis())+"_"+rnd+"."+extension;
+ //     System.out.println("rename:"+rename);
+		if(profile !=null) {
+			String extOrigi=profile.getOriginalFilename();
+			String ext=extOrigi.substring(extOrigi.lastIndexOf(".")+1);
+			if(ext.equals("jpg")|| ext.equals("png")||ext.equals("gif")) {
+				String path=session.getServletContext().getRealPath("/resources/upload/profile");
+				File dir=new File(path);
+				if(!dir.exists()) dir.mkdirs();
+				String originalFileName=profile.getOriginalFilename();
+				String extension=originalFileName.substring(originalFileName.lastIndexOf(".")+1);
+				SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+				int rnd=(int)(Math.random()*10000);
+				String rename=sdf.format(System.currentTimeMillis())+"_"+rnd+"."+extension;
+				System.out.println("rename:"+rename);
+					try {
+						profile.transferTo(new File(path+"/"+rename));
+					}catch(IOException e) {
+						e.printStackTrace();
+					}
+					user.setUserID(userID);
+					user.setProfile(originalFileName);
+					user.setReProfile(rename);
+					
+					int result=service.profileUpdate(user);
+					if(result ==1) {
+						mv.addObject("userID",userID);
+						mv.addObject("messageType","성공 메시지");
+						mv.addObject("messageContent","프로필이 변경되었습니다.");
+						mv.setViewName("profileUpdate");
+					}else {
+						mv.addObject("userID",userID);
+						mv.addObject("messageType","오류 메시지");
+						mv.addObject("messageContent","입력에 실패하였습니다.");
+						mv.setViewName("profileUpdate");
+					}
+			}else {
+				User user1=service.selectOneMember(userID);
+				String path=session.getServletContext().getRealPath("/resources/upload/profile");
+				String reProFile=user1.getReProfile();
+				File refile=new File(path+"/"+reProFile);
+				
+				if(refile.exists()) {//파일 존재여부확인
+					if(refile.delete())//파일 삭제
+						System.out.println("파일 삭제 성공");
+					else System.out.println("파일 삭제 실패 ");
+				}
+			}
+		}
+	
+		return mv;
+	}
 }

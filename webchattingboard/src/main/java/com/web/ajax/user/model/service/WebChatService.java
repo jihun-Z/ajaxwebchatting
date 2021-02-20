@@ -38,5 +38,7 @@ public interface WebChatService {
 
 	int update(User user);
 
+	int profileUpdate(User user);
+
 
 }

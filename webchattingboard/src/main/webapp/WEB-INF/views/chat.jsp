@@ -203,6 +203,7 @@
 						</a>
 						<ul class="dropdown-menu">
 							<li><a href="${path }/update.do?userID=<c:out value="${userID}"/>">회원정보수정</a></li>
+							<li class=""><a href="${path }/profileUpdate.do?userID=<c:out value="${userID}"/>">프로필 수정</a></li>
 							<li><a href="${path }/logoutAction.do">로그아웃</a></li>
 					
 						</ul>

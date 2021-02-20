@@ -197,6 +197,11 @@ public class WebChatServiceIm implements WebChatService {
 		// TODO Auto-generated method stub
 		return dao.update(session,user);
 	}
+	@Override
+	public int profileUpdate(User user) {
+		// TODO Auto-generated method stub
+		return dao.profileUpdate(session,user);
+	}
 
 	
 

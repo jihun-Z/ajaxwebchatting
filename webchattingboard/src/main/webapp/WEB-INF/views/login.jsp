@@ -48,7 +48,7 @@
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav">
 				<li class="active"><a href="${path }/index.do">메인</a></li>
-				<li class="active"><a href="${path }/find.do">친구찾기</a></li>
+				<li class=""><a href="${path }/find.do">친구찾기</a></li>
 			</ul>
 			<c:if test="${userID == null }">
 				<ul class="nav navbar-nav navbar-right">

@@ -85,7 +85,7 @@
 						</a>
 						<ul class="dropdown-menu">
 							<li><a href="${path }/login.do">로그인</a></li>
-							<li><a href="${path }/home.do">회원가입</a></li>
+							<li class="active"><a href="${path }/home.do">회원가입</a></li>
 						</ul>
 					</li>
 			</ul>

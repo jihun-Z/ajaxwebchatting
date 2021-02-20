@@ -42,4 +42,6 @@ public interface WebChatDao {
 
 	int update(SqlSession session, User user);
 
+	int profileUpdate(SqlSession session, User user);
+
 }

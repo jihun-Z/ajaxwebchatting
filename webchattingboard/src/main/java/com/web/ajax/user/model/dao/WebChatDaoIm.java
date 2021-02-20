@@ -127,4 +127,10 @@ public class WebChatDaoIm implements WebChatDao {
 		return session.update("user.update",user);
 	}
 
+	@Override
+	public int profileUpdate(SqlSession session, User user) {
+		// TODO Auto-generated method stub
+		return session.update("user.profileUpdate",user);
+	}
+
 }

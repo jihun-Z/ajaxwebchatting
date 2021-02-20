@@ -66,4 +66,7 @@
 	update member set userPassword=#{userPassword}, userName=#{userName},
 	userAge=#{userAge},userGender=#{userGender},email=#{email} where userID=#{userID}
 	</update>
+	<update id="profileUpdate" parameterType="user">
+		update member set userProfile=#{profile},renameUserProfile=#{reProfile} where userID=#{userID}
+	</update>
 </mapper>
