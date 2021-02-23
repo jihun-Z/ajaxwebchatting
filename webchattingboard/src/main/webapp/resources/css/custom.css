@@ -299,3 +299,7 @@ a:hover{
 	cursor:inherit;
 	display:block;
 }
+/* 채팅 jsp 나 위치  */
+h4.media-heading.text-left {
+    text-align: end;
+}

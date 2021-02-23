@@ -44,4 +44,6 @@ public interface WebChatDao {
 
 	int profileUpdate(SqlSession session, User user);
 
+	User getFile(SqlSession session, String userID);
+
 }

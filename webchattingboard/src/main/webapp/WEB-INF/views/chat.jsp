@@ -50,6 +50,7 @@
      <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
      <script src="${path }/resources/js/bootstrap.js"></script>
      <script type="text/javascript">
+     	
      	function autoClosingAlert(selector,delay){
      		let alert =$(selector).alert();
      		console.log("alert:"+alert);
@@ -106,7 +107,6 @@
      				if(data == null) return;
      				let parsed=JSON.parse(data);
      				let result=parsed.result;
-     				console.log("Chat-result:"+result);
      				for(var i= 0; i <result.length; i++){
      					if(result[i][0].value == fromID){
      						result[i][0].value= '나';
@@ -120,28 +120,77 @@
      		});
      	}
      	function addChat(chatName, chatContent,chatTime){
-     		
-     		console.log("addchat 실행");
-     		$('#chatList').append('<div class="row">'+
-     		'<div class="col-lg-12">' +
-     		'<div class="media">'+
-     		'<a class="pull-left" href="#">'+
-     		'<img class="media-object img-circle" style="width:30px; height:30px;" src="${path}/resources/images/icon.png" alt="">'+
-     		'</a>'+
-     		'<div class="media-body">'+
-     		'<h4 class="media-heading">'+
-     		chatName +
-     		'<span class="small pull-right">'+
-     		chatTime +
-     		'</span>'+
-     		'</h4>'+
-     		'<p>'+
-     		chatContent + 
-     		'</p>'+
-     		'</div>'+
-     		'</div>'+
-     		'</div>'+
-     		'</div>');
+     		const fromID='<c:out value="${userID}"/>';
+     		if(chatName == '나'){ 
+    			//이미지 파일 명 불러오기 
+     			$.ajax({
+     				type:"post",
+     				url:"${path}/getFile.do",
+     				data:{
+     					userID:fromID
+     				},
+     				success:function(data){
+     					
+			     		 let fromProfile=data;
+			          		console.log("addchat 실행 안되냐"+fromProfile);
+			     		$('#chatList').append('<div class="row">'+
+			     		'<div class="col-lg-12">' +
+			     		'<div class="media">'+
+			     		'<a class="pull-right" href="#">'+
+			     		'<img class="media-object img-circle" style="width:30px; height:30px;" src=" ${path}'+fromProfile+'" alt="">'+
+			     		'</a>'+
+			     		'<div class="media-body">'+
+			     		'<h4 class="media-heading text-left">'+
+			     		chatName +
+			     		'<span class="small pull-left">'+
+			     		chatTime +
+			     		'</span>'+
+			     		'</h4>'+
+			     		'<p class="pull-right">'+
+			     		chatContent + 
+			     		'</p>'+
+			     		'</div>'+
+			     		'</div>'+
+			     		'</div>'+
+			     		'</div>');
+     				}
+     			})
+     		}else{
+     			// 받는 사람 이미지 파일 명 불러오기 
+     			const toID='<c:out value="${toID}"/>';
+     			$.ajax({
+     				type:'post',
+     				url:'${path}/getFile1.do',
+     				data:{
+						userID:toID     					
+     				},
+     				success:function(data){
+		     			 let toProfile=data;
+		         		console.log("addchat 실행"+toProfile);
+		         		$('#chatList').append('<div class="row">'+
+		         		'<div class="col-lg-12">' +
+		         		'<div class="media">'+
+		         		'<a class="pull-left" href="#">'+
+		         		'<img class="media-object img-circle" style="width:30px; height:30px;" src=" ${path}'+toProfile+'" alt=""/>'+
+		         		'</a>'+
+		         		'<div class="media-body">'+
+		         		'<h4 class="media-heading">'+
+		         		chatName +
+		         		'<span class="small pull-right">'+
+		         		chatTime +
+		         		'</span>'+
+		         		'</h4>'+
+		         		'<p>'+
+		         		chatContent + 
+		         		'</p>'+
+		         		'</div>'+
+		         		'</div>'+
+		         		'</div>'+
+		         		'</div>');
+     				}
+     				
+     			})
+     		}
      		$("#chatList").scrollTop($('#chatList')[0].scrollHeight);//아래 스크롤 고정코드
      	};
      	
@@ -150,7 +199,7 @@
      	 	
      			chatListFunction(lastID);
      	
-     	}
+     	};
   	  //안 읽은 메세지함 불러오기 
        	function getUnread(){
      		$.ajax({

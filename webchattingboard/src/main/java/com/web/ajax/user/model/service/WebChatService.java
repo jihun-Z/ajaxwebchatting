@@ -40,5 +40,7 @@ public interface WebChatService {
 
 	int profileUpdate(User user);
 
+	User getFile(String userID);
+
 
 }

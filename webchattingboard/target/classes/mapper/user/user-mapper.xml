@@ -6,7 +6,7 @@
 
 
 	<insert id="insertUser" parameterType="user">
-				insert into member values(#{userID},#{userPassword},#{userName},#{userAge},#{userGender},#{email},#{profile,jdbcType=VARCHAR})
+				insert into member values(#{userID},#{userPassword},#{userName},#{userAge},#{userGender},#{email},#{profile,jdbcType=VARCHAR},#{reProfile,jdbcType=VARCHAR})
 	</insert>
 	
 	<select id="selectOneMember" resultType="user">
@@ -67,6 +67,10 @@
 	userAge=#{userAge},userGender=#{userGender},email=#{email} where userID=#{userID}
 	</update>
 	<update id="profileUpdate" parameterType="user">
-		update member set userProfile=#{profile},renameUserProfile=#{reProfile} where userID=#{userID}
+		update member set profile=#{profile},reProfile=#{reProfile} where userID=#{userID}
 	</update>
+	
+	<select id="getFile" resultType="user">
+	select REPROFILE from member where userID=#{userID}
+	</select>
 </mapper>

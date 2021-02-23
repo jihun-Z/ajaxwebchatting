@@ -202,6 +202,11 @@ public class WebChatServiceIm implements WebChatService {
 		// TODO Auto-generated method stub
 		return dao.profileUpdate(session,user);
 	}
+	@Override
+	public User getFile(String userID) {
+		// TODO Auto-generated method stub
+		return dao.getFile(session,userID);
+	}
 
 	
 
