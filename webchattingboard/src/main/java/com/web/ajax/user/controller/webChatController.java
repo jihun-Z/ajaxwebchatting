@@ -224,7 +224,7 @@ public class webChatController {
 	@RequestMapping("/chatList.do")
 	public void chatList(String fromID,String toID,String listType,
 			HttpSession session,HttpServletResponse response) throws Exception {
-		
+		System.out.println("fromID"+fromID+"toID"+toID+"listType"+listType);
 		response.setContentType("text/html;charset=UTF-8");;
 		System.out.println(""+listType);
 		if(fromID==null || fromID.equals("")|| toID==null || toID.equals("")||
@@ -237,14 +237,15 @@ public class webChatController {
 		
 		else if(listType.equals("ten"))
 	
-				response.getWriter().write(getTen(URLDecoder.decode(fromID,"UTF-8"),URLDecoder.decode(toID,"UTF-8")));
+				response.getWriter().write(getTen(fromID,toID));
 		else {
 			try {
 				if(!fromID.equals(session.getAttribute("userID"))) {
 					response.getWriter().write("");
 					return;
 				}
-				response.getWriter().write(getID(URLDecoder.decode(fromID,"UTF-8"),URLDecoder.decode(toID,"UTF-8"),listType));
+				response.getWriter().write(getID(fromID,toID,listType));
+				System.out.println("실행");
 			}catch(Exception e) {
 					response.getWriter().write("");
 				}
@@ -438,14 +439,6 @@ public class webChatController {
 			@RequestParam(value="profile")MultipartFile profile,HttpSession session){
 		System.out.println("profile:"+profile.getOriginalFilename());
 		User user=new User();
-//		String path=session.getServletContext().getRealPath("/resources/upload/profile");
-//		File dir=new File(path);
-//		String originalFileName=profile.getOriginalFilename();
-//		String extension=originalFileName.substring(originalFileName.lastIndexOf(".")+1);
-//		SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
-//		int rnd=(int)(Math.random()*10000);
-//		String rename=sdf.format(System.currentTimeMillis())+"_"+rnd+"."+extension;
- //     System.out.println("rename:"+rename);
 		if(profile !=null) {
 			String extOrigi=profile.getOriginalFilename();
 			String ext=extOrigi.substring(extOrigi.lastIndexOf(".")+1);

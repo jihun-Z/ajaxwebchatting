@@ -97,8 +97,8 @@
      			type:"post",
      			url:"${path}/chatList.do",
      			data:{
-     				fromID:encodeURIComponent(fromID),
-     				toID:encodeURIComponent(toID),
+     				fromID:fromID,
+     				toID:toID,
      				listType:type
      			},
      			success:function(data){
