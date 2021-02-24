@@ -16,7 +16,7 @@ public interface WebChatService {
 
 	int submit(Chat chat);
 
-	List<Chat> getChatListByRecent(String fromID, String toID);
+	List<Chat> getChatListByRecent(String fromID, String toID,String listType);
 
 	List<Chat> getChatListByID(String fromID, String toID,String chatID);
 
@@ -41,6 +41,7 @@ public interface WebChatService {
 	int profileUpdate(User user);
 
 	User getFile(String userID);
+
 
 
 }

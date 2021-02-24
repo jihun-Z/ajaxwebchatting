@@ -28,8 +28,6 @@ public interface WebChatDao {
 
 	List<Chat> getChatListByID(SqlSession session, String fromID, String toID, String chatId);
 
-	List<Chat> getChatListByRecent(SqlSession session, String fromID, String toID);
-
 	Object readChat(SqlSession session, String fromID, String toID);
 
 	int getAllUnreadChat(SqlSession session, String userID);
@@ -45,5 +43,7 @@ public interface WebChatDao {
 	int profileUpdate(SqlSession session, User user);
 
 	User getFile(SqlSession session, String userID);
+
+	List<Chat> getChatListByRecent(SqlSession session, String fromID, String toID, String listType);
 
 }

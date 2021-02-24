@@ -303,3 +303,9 @@ a:hover{
 h4.media-heading.text-left {
     text-align: end;
 }
+#imagePreview img{
+    width: 50px;
+    height: 50px;
+    box-sizing: border-box;
+
+}

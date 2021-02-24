@@ -35,6 +35,7 @@
      				if(result == 0){
      					return;
      				}else{
+     				 	console.log(""+result);
      					showUnread(result);
      				}
      			}

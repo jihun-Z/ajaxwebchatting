@@ -65,8 +65,8 @@ public class WebChatServiceIm implements WebChatService {
 		return result;
 	}
 	@Override
-	public List<Chat> getChatListByRecent(String fromID, String toID) {
-		List<Chat> map=dao.getChatListByRecent(session,fromID,toID);
+	public List<Chat> getChatListByRecent(String fromID, String toID,String listType) {
+		List<Chat> map=dao.getChatListByRecent(session,fromID,toID,listType);
 		System.out.println("Map[Service]:"+map);
 		
 		List<Chat> chatList=new ArrayList<Chat>();
@@ -207,7 +207,5 @@ public class WebChatServiceIm implements WebChatService {
 		// TODO Auto-generated method stub
 		return dao.getFile(session,userID);
 	}
-
-	
 
 }

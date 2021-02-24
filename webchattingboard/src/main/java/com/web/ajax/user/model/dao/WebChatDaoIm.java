@@ -51,13 +51,16 @@ public class WebChatDaoIm implements WebChatDao {
 	}
 
 	@Override
-	public List<Chat> getChatListByRecent(SqlSession session, String fromID, String toID) {
-		TreeMap<String,String> map=new TreeMap<String,String>();
-		map.put("fromID",fromID);
-		map.put("toID",toID);
+	public List<Chat> getChatListByRecent(SqlSession session, String fromID, String toID,String listType) {
+		
+		int chatId=Integer.parseInt(listType);
+		Chat chat=new Chat();
+		chat.setFromID(fromID);
+		chat.setToID(toID);
+		chat.setChatId(chatId);
 		
 		// TODO Auto-generated method stub
-		return session.selectList("user.getChatListByRecent",map);
+		return session.selectList("user.getChatListByRecent",chat);
 	}
 
 	@Override

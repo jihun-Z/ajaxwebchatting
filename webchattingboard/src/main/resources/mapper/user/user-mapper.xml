@@ -26,12 +26,7 @@
 		order by chatTime
 	</select>
 		<select id="getChatListByRecent" resultType="chat">
-		select * from chat where 
-		((fromid=#{fromID} and toId=#{toID}) 
-		and (toId=#{fromID} and fromId=#{toID}))
-		and chatId >(select max(chatId) - '20' from chat 
-		where (fromid=#{fromID} and toId=#{toID}) 
-		and (toId=#{fromID} and fromId=#{toID})) order by chatTime
+		 select * from(select * from chat order by chatTime DESC)where ROWNUM = 1
 	</select>
 	<insert id="submit" parameterType="chat">
 		insert into chat values(chatId.nextval,#{fromID},#{toID},#{chatContent},sysdate,'0')

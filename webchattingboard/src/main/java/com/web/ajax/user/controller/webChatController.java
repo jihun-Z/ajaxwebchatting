@@ -223,43 +223,43 @@ public class webChatController {
 	// chatlistServlet
 	@ResponseBody
 	@RequestMapping("/chatList.do")
-	public void chatList(String fromID, String toID, String listType, HttpSession session, HttpServletResponse response)
+	public void chatList(String fromID, String toID, String chatId, HttpSession session, HttpServletResponse response)
 			throws Exception {
-		System.out.println("fromID" + fromID + "toID" + toID + "listType" + listType);
+		System.out.println("fromID" + fromID + "toID" + toID + "listType" + chatId);
 		response.setContentType("text/html;charset=UTF-8");
 		;
-		System.out.println("" + listType);
-		if (fromID == null || fromID.equals("") || toID == null || toID.equals("") || listType == null
-				|| listType.equals("")) {
+		System.out.println("" + chatId);
+		if (fromID == null || fromID.equals("") || toID == null || toID.equals("") || chatId == null
+				|| chatId.equals("")) {
 
 			response.getWriter().write("");
 		}
 
 		// TODO Auto-generated catch block
 
-		else if (listType.equals("ten"))
-
-			response.getWriter().write(getTen(fromID, toID));
-		else {
+		else if (chatId.equals("0"))
 			try {
 				if (!fromID.equals(session.getAttribute("userID"))) {
 					response.getWriter().write("");
 					return;
 				}
-				response.getWriter().write(getID(fromID, toID, listType));
+				response.getWriter().write(getID(fromID, toID, chatId));
 				System.out.println("실행");
 			} catch (Exception e) {
 				response.getWriter().write("");
 			}
+
+		else {
+			response.getWriter().write(getTen(fromID, toID,chatId));
 		}
 	}
 
-	public String getTen(String fromID, String toID) {
-		System.out.println("getTen: 실행");
+	public String getTen(String fromID, String toID, String chatId) {
+		System.out.println("getTen: 실행"+chatId);
 		StringBuffer result = new StringBuffer();
 
 		result.append("{\"result\":[");
-		List<Chat> chatList = service.getChatListByRecent(fromID, toID);
+		List<Chat> chatList = service.getChatListByRecent(fromID, toID,chatId);
 		if (chatList.size() == 0)
 			return "";
 		for (int i = 0; i < chatList.size(); i++) {

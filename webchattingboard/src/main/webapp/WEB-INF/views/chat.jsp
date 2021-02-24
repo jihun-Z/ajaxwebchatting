@@ -76,13 +76,14 @@
      				success:function(result){
      					if(result == 1){
      						autoClosingAlert("#successMessage",3000);
+     						console.log("1번");
      						getInfiniteChat();
      					}else if(result== 0){
      						autoClosingAlert("#dangerMessage",3000);
-     						getInfiniteChat();
+     						//getInfiniteChat();
      					}else{
      						autoClosingAlert("#worningMessage",3000);
-     						getInfiniteChat();
+     					//	getInfiniteChat();
      					}
      				}
      		});
@@ -93,14 +94,14 @@
      		let fromID='<c:out value='${userID}'/>';
      		let toID='<c:out value='${toID}'/>';
      		//let toID='11111';
-     		console.log("chatListFunction-fromID:"+fromID);
+     		console.log("2번"+fromID);
      		$.ajax({
      			type:"post",
      			url:"${path}/chatList.do",
      			data:{
      				fromID:fromID,
      				toID:toID,
-     				listType:type
+     				chatId:type
      			},
      			success:function(data){
      				console.log("반환된 데이터 실행: "+data);
@@ -132,7 +133,7 @@
      				success:function(data){
      					
 			     		 let fromProfile=data;
-			          		console.log("addchat 실행 안되냐"+fromProfile);
+			          		console.log("3번"+fromProfile);
 			     		$('#chatList').append('<div class="row">'+
 			     		'<div class="col-lg-12">' +
 			     		'<div class="media">'+
@@ -154,7 +155,7 @@
 			     		'</div>'+
 			     		'</div>');
      				}
-     			})
+     			});
      		}else{
      			// 받는 사람 이미지 파일 명 불러오기 
      			const toID='<c:out value="${toID}"/>';
@@ -166,7 +167,7 @@
      				},
      				success:function(data){
 		     			 let toProfile=data;
-		         		console.log("addchat 실행"+toProfile);
+		         		console.log("4번"+toProfile);
 		         		$('#chatList').append('<div class="row">'+
 		         		'<div class="col-lg-12">' +
 		         		'<div class="media">'+
@@ -189,7 +190,7 @@
 		         		'</div>');
      				}
      				
-     			})
+     			});
      		}
      		$("#chatList").scrollTop($('#chatList')[0].scrollHeight);//아래 스크롤 고정코드
      	};
@@ -198,8 +199,7 @@
      	function getInfiniteChat(){
      	 	
      			chatListFunction(lastID);
-     	
-     	};
+     	}; 
   	  //안 읽은 메세지함 불러오기 
        	function getUnread(){
      		$.ajax({
@@ -345,6 +345,7 @@
 	$(document).ready(function(){
 		getUnread();
 		chatListFunction("0");
+		console.log("6번");
 		getInfiniteChat();
 		getInfiniteUnread();
 	});
