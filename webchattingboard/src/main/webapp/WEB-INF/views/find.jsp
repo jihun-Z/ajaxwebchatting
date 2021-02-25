@@ -114,6 +114,7 @@
 				<li ><a href="${path }/index.do">메인</a></li>
 				<li class="active" ><a href="${path }/find.do">친구찾기</a></li>
 				<li ><a href="${path }/box.do">메시지함<span id="unread" class="label label-info"></span></a></li>
+				<li class=""><a href="${path }/boardView.do">자유게시판</a></li>
 			</ul>
 				<ul class="nav navbar-nav navbar-right">
 						<li class="dropdown">
@@ -125,7 +126,6 @@
 								<li><a href="${path }/update.do?userID=<c:out value="${userID}"/>">회원정보수정</a></li>
 								<li class=""><a href="${path }/profileUpdate.do?userID=<c:out value="${userID}"/>">프로필 수정</a></li>
 								<li><a href="${path }/logoutAction.do">로그아웃</a></li>
-						
 							</ul>
 						</li>
 					</ul>

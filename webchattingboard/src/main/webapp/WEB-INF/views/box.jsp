@@ -114,7 +114,7 @@
 				<li ><a href="${path }/find.do">친구찾기</a></li>
 				<li ><a href="${path }/chat.do">채팅</a></li>
 				<li class="active" ><a href="${path }/box.do">메시지함<span id="unread" class="label label-info"></span></a></li>
-				
+				<li class=""><a href="${path }/boardView.do">자유게시판</a></li>
 			</ul>
 		<c:if test="${userID == null }">
 			<ul class="nav navbar-nav navbar-right">

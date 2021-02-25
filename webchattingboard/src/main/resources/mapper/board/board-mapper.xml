@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="board">
+
+	<resultMap type="board" id="boardMap">
+		<result column="devlang" property="devlang" typeHandler="strArr"/>
+	</resultMap>
+	
+	<insert id="boardWriteEnllo" parameterType="board">
+			<if test="boardGroup == null ">
+					insert into board values(#{userID},boardID.nextval,${boardTitle},
+					${boardContent},SYSDATE,0,(select nvl(max(boardGroup),1) + 1 from board),0,0)
+					
+			</if>
+					insert into board values(#{userID},boardID.nextval,${boardTitle},
+					${boardContent},SYSDATE,0,(select nvl(max(boardGroup),1) + 1 from board),0,0)
+		<selectKey keyProperty="boardNo"  resultType="_int" order="AFTER">
+			select boardID.currval from dual
+		</selectKey>
+	</insert>
+	
+	<insert id="insertAttachment" parameterType="attachment">
+		insert into attachment values(attachmentNo.nextval,#{boardNo},#{boardFile,typeHandler=strArr},#{boardReFile,typeHandler=strArr},sysdate,0)
+	</insert>
+	
+	<select id="getBoard" resultType="board">
+		select * from board where userID= #{userID}
+	</select>
+
+</mapper>

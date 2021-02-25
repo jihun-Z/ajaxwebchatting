@@ -29,18 +29,7 @@
      <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
      <script src="${path }/resources/js/bootstrap.js"></script>
 </head>
-<script type="text/javascript">
-	function passwordCheckFunction(){
-		let userPassword1 = $("#userPassword").val(); 
-		let userPassword2 = $("#userPassword1").val(); 
-		if(userPassword1 != userPassword2 ){
-			$("#passwordCheckMessage").html("비밀번호가 서로 일치하지않습니다.");
-			
-		}else{
-			$('#passwordCheckMessage').html('');
-		}
-	}
-</script>
+
 <body>
 	<nav class="navbar navbar-default">
 		<div class="navbar-header">
@@ -61,14 +50,14 @@
 			</ul>
 			
 			<ul class="nav navbar-nav navbar-right">
-					<li><span><h3>${user.userName }</h3>님</span></li>
+					<li><span><h3>${userID}</h3>님</span></li>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle"
 						data-toggle="dropdown" role="buton" aria-haspopup="true"
 						aria-expanded="false">접속하기<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
-							<li class="active"><a href="${path }/update.do?userID=<c:out value="${userID}"/>">회원정보수정</a></li>
+							<li ><a href="${path }/update.do?userID=<c:out value="${userID}"/>">회원정보수정</a></li>
 							<li class=""><a href="${path }/profileUpdate.do?userID=<c:out value="${userID}"/>">프로필 수정</a></li>
 							<li><a href="${path }/logoutAction.do">로그아웃</a></li>
 						</ul>
@@ -77,53 +66,44 @@
 		</div>
 	</nav>
 	<div class="container">
-		<form method="post" action="${path }/updateEnd.do">
+		<form method="POST" action="${path }/boardWriteEnllo.do" enctype="multipart/form-data">
 			<table class="table table-boardered table-hover" style="textalign:center; border:1px solid #dddddd">
 				<thead>
 					<tr>
-						<th colspan="2"><h4>회원등록양식</h4> 
+						<th colspan="3"><h4>게시물 등록 양식</h4> 
 						</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td style="width:110px"><h5>아이디</h5>
-						<td><input class="form-control" type="text" id="userID" name="userID" maxlength="20" placeholder="아이디를 입력하세요" value="${user.userID }" required readOnly/></td>
+						<td style="width:110px"><h5>아이디</h5></td>
+						<td><h5>${userID }</h5></td>
+						<td><input class="form-control" type="hidden" id="userID" name="userID" maxlength="20" placeholder="아이디를 입력하세요" value="${userID }" required readOnly/></td>
 					</tr>
 					<tr>
-						<td style="width:110px"><h5>비밀번호</h5>
-						<td colspan="2"><input onkeyup="passwordCheckFunction();" class="form-control" type="password" id="userPassword" name="userPassword" maxlength="20" placeholder="비밀번호를 입력하세요" value=""/></td>
+						<td style="width:110px"><h5>글 제목</h5></td>
+						<td><input class="form-control" type="text" name="boardTitle" maxlength="50" placeholder="글 제목을 입력하세요." value="" required/></td>
 					</tr>
 					<tr>
-						<td style="width:110px"><h5>비밀번호 확인</h5>
-						<td colspan="2"><input onkeyup="passwordCheckFunction();" class="form-control" type="password" id="userPassword1" name="userPassword1" maxlength="20" placeholder="비밀번호 확인 를 입력하세요" value=""/></td>
+						<td style="width:110px"><h5>내용</h5></td>
+						<td><textarea class="form-control" rows="10" type="text" name="boardContent" maxlength="500" placeholder="글 내용을 입력하세요." value="" ></textarea></td>
 					</tr>
 					<tr>
-						<td style="width:110px"><h5>이름</h5>
-						<td colspan="2"><input  class="form-control" type="text" id="userName" name="userName" maxlength="20" placeholder="이름을 입력하세요" value=" ${user.userName }"/></td>
-					</tr>
-					<tr>
-						<td style="width:110px"><h5>나이</h5>
-						<td colspan="2"><input  class="form-control" type="text" id="userAge" name="userAge" maxlength="20" placeholder="나이을 입력하세요" value="${user.userAge }"/></td>
-					</tr>
-					<tr>
-						<td style="width:110px"><h5>성별</h5>
-						<td colspan="2">
-							<div class="form-group" style="text-align:center ;margin: 0 auto;">
-								<div class="btn-group" data-toggle="buttons">
-									<label class="btn btn-primary active" ${user.userGender =='남자'?active:"" }>
-										<input type="radio" name="userGender" autocomplete="off" value="남자" ${user.userGender =='남자'?checked:"" }>남자
-									</label>
-									<label class="btn btn-primary active" ${user.userGender =='여자'?active:"" }>
-										<input type="radio" name="userGender" autocomplete="off" value="여자" ${user.userGender =='여자'?checked:"" }>여자
-									</label>
+						<td style="width:110px"><h5>파일 업로드</h5></td>
+							<td colspan="2">
+								<input multiple="multiple" type="file" name="boardFile" class="file">
+								<div class="input-group col-xl-12">
+									<span class="input-group-addon"><i class="glyphicon glyphicon-picture"></i></span>
+									<input  class="text" id="inputText" type="form-control input-lg" disabled/>
+									<span class="input-group-btn">
+										<button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search">파일찾기</i></button>
+									</span>	
 								</div>
-							</div>
-						</td>
+							</td>
 					</tr>
 					<tr>
-						<td style="width:110px"><h5>이메일</h5>
-						<td colspan="2"><input  class="form-control" type="email" id="email" name="email" maxlength="20" placeholder="이메일을 입력하세요" value="<c:out value="${user.email }"/>"/></td>
+						<td style="width:110px"><h5>이미지</h5>
+						<td id="imagePreview"></td>
 					</tr>
 					<tr>
 						<td style="text-align: left;" colspan="3"><h5 style="color:red;" id="passwordCheckMessage"></h5><input class="btn btn-primary pull-right" type="submit" value="등록"></td>
@@ -146,7 +126,7 @@
 	<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" arid-hidden="true">
 		<div class="vertical-alignment-helper">
 			<div class="modal-dialog vertical-align-center">
-				<div class="modal-content <%if (messageType.equals("오류메시지")) out.println("panel-warning");else out.println("panel-success"); %>">
+					<div class="modal-content ${messageType.equals('오류메시지')?'panel-warning':'panel-success' }">
 					<div class="modal-header panel-heading">
 						<button type="button" class="close" data-dismiss="modal">
 							<span aria-hidden="true">&times</span>
@@ -166,7 +146,7 @@
 			</div>
 		</div>
 	</div>
-	</c:if>
+	</c:if> 
 	<script>
 		$("#messageModal").modal("show");
 	</script>
@@ -199,5 +179,65 @@
 	</div>
 <%-- </c:if> --%>
 </body>
+<script type="text/javascript">
 
+
+/* $(function(){
+	$("[name=profile]").on('change',function(e){
+		var filename=$(this).prop('files')[0].name;
+		$(this).next(".custom-file-label").html(filename);
+		setThumbnail(e);
+	});
+}); */
+//browse 버튼 클릭 파일 upload 이벤트 함수 
+$(document).on('click','.browse',function(){
+	let file=$(this).parent().parent().parent().find('.file');
+	file.trigger('click');
+});
+//자기가 선택한 파일경로 fakepath를 이용하기
+$(document).on('click','.file',function(){
+	$(this).parent().find('.form-control').val($(this).val().replace(/C:\\fakepath\\/i,''));
+	$()
+});
+//이미지 미리보기 함수 
+function setThumbnail(event) { 
+	var reader = new FileReader(); 
+	reader.onload = function(event) { 
+		var img = document.createElement("img");
+		img.setAttribute("src", event.target.result); 
+		document.querySelector("#imagePreview").appendChild(img);
+		};
+		reader.readAsDataURL(event.target.files[0]); 
+		};
+
+
+/* function showUpImg(e){
+	let sel_files=[];
+	
+	$("#imagePreview").empty();
+	let file=e.target.files;
+	let fileArr=Array.prototype.slice.call(file);
+	let index = 0;
+	fileArr.forEach((e)=>{
+		if(!f.type.match("image/.*")){
+			alert("이미지 확장자만 업로드 가능합니다.");
+			return;
+		};
+		if(file.length < 2){
+			sel_files.push(f);
+			let reader= new FileReader();
+			reader.onlead = (e)=> {
+				let html='<a id=img_id${index}><img src=${e.target.result} data-file=${f.name}/></a>';
+				$("#imagePreview").append(html);
+				index++;
+			};
+			reader.readAsDataURL(f);
+		}
+	});
+	if(file.length >= 2){
+		alert("최대 1장만 업로드할수있습니다.");
+	}
+} */
+
+</script>
 </html>

@@ -46,6 +46,7 @@
 			<ul class="nav navbar-nav">
 				<li ><a href="${path }/index.do">메인</a></li>
 				<li ><a href="${path }/find.do">친구찾기</a></li>
+				<li class=""><a href="${path }/boardView.do">자유게시판</a></li>
 			</ul>
 			
 			<ul class="nav navbar-nav navbar-right">

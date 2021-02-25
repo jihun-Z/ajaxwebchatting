@@ -7,6 +7,9 @@
 	<typeAliases>
 		<typeAlias type="com.web.ajax.user.model.vo.User" alias="user"/>
 		<typeAlias type="com.web.ajax.user.model.vo.Chat" alias="chat"/>
+		<typeAlias type="com.web.ajax.board.model.vo.Board" alias="board"/>
+		<typeAlias type="com.web.ajax.board.model.vo.Attachment" alias="attachment"/>
+		<typeAlias type="com.web.ajax.common.typeHandler.StringArrayTypeHandler" alias="strArr"/>
 		
 	</typeAliases>
 </configuration>

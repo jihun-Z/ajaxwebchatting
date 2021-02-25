@@ -68,7 +68,7 @@
 				<li ><a href="${path }/find.do">친구찾기</a></li>
 				<li ><a href="${path }/chat.do">채팅</a></li>
 				<li ><a href="${path }/box.do">메시지함<span id="unread" class="label label-info"></span></a></li>
-				<li class=""><a href="${path }/boardView.do">자유게시판</a></li>
+				<li class="active"><a href="${path }/boardView.do">자유게시판</a></li>
 			</ul>
 		<c:if test="${userID == null }">
 			<ul class="nav navbar-nav navbar-right">
@@ -102,50 +102,6 @@
 			</c:if>
 		</div>
 	</nav>
-<%
-	String messageContent = null;
-	if(session.getAttribute("messageContent") != null){
-		messageContent = (String) session.getAttribute("messageContent");
-	}
-	String messageType= null;
-	if(session.getAttribute("messageType") != null ){
-		messageType=(String) session.getAttribute("messageType");
-	}
-%> 
-<c:if test="${messageContent != null}">
-<c:if test="${messageType != null}">
-	<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" arid-hidden="true">
-		<div class="vertical-alignment-helper">
-			<div class="modal-dialog vertical-align-center">
-				<div class="modal-content <c:if test="${messageType.equals('오류메시지')}"><c:out value="panel-warning"/></c:if><c:if test="${!messageType.equals('오류메시지')}"><c:out value="panel-success"/></c:if><%-- <%if (messageType.equals("오류메시지")) out.println("panel-warning");else out.println("panel-success"); %> --%>">
-					<div class="modal-header panel-heading">
-						<button type="button" class="close" data-dismiss="modal">
-							<span aria-hidden="true">&times</span>
-							<span class="sr-only">Close</span>
-						</button>
-						<h4 class="modal-title">
-							<c:out value="${messageType }"/>
-						</h4>
-					</div>
-					<div class="modal-body">
-						<c:out value="${messageContent }"/>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-primary" data-dismiss="modal">확인</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	</c:if>
-	</c:if>
-	<script>
-		$("#messageModal").modal("show");
-	</script>
-	<%
-		session.removeAttribute("messageContent");
-		session.removeAttribute("messageType");
-	%>
 	<c:if test="${userID != null }">
 		<script type="text/javascript">
 			$(document).ready(function(){
@@ -153,5 +109,3 @@
 			});
 		</script>
 	</c:if>
-</body>
-</html>
